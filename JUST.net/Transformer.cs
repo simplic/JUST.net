@@ -180,24 +180,22 @@ namespace JUST
         #endregion
 
         #region aggregate functions
-        public static string findfirstinarray(string array, bool predicate, string inputJson)
+        public static string findstringinarray_eq(string array, string comparePath, string compareValue, string outputPath, string inputJson)
         {
             try
             {
+                string value = null;
                 JArray parsedArray = JArray.Parse(array);
-        
-                double integerresult = 0;
-        
-                if (parsedArray != null)
+                foreach (var element in parsedArray)
                 {
-                    foreach (JToken token in parsedArray.Children())
+                    var thisValue = element.SelectToken(comparePath)?.Value<string>();
+                    if (thisValue?.ToString()?.ToLower() == compareValue?.ToString()?.ToLower())
                     {
-        
-                        integerresult += Convert.ToDouble(token.ToString());
+                        return element.SelectToken(outputPath).Value<string>();
                     }
                 }
-        
-                return integerresult.ToString();
+
+                return value;
             }
             catch { return null; }
         }
@@ -477,9 +475,19 @@ namespace JUST
 
         public static object currentvalueatpath(JArray array, JToken currentElement, string jsonPath)
         {
+            try
+            {
             JToken selectedToken = currentElement.SelectToken(jsonPath);
 
             return GetValue(selectedToken);
+
+
+            }
+            catch
+            {
+
+                return null;
+            }
         }
 
         public static object lastvalueatpath(JArray array, JToken currentElement, string jsonPath)
