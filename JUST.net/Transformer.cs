@@ -22,7 +22,6 @@ namespace JUST
             return GetValue(selectedToken);
         }
 
-
         public static string exists(string jsonPath, string inputJson)
         {
             JsonReader reader = new JsonTextReader(new StringReader(inputJson));
@@ -72,6 +71,18 @@ namespace JUST
         {
             string string2Result = (string2 != null) ? string2 : string.Empty;
             return string1 != null ? string1 + string2Result : string.Empty + string2Result;
+        }
+
+        /// <summary>
+        /// Compare to values
+        /// </summary>
+        /// <param name="this">Basic value</param>
+        /// <param name="other">Value to compare with</param>
+        /// <param name="inputJson">Json object</param>
+        /// <returns>True if the objects are equal</returns>
+        public static bool equals(string @this, string other, string inputJson)
+        {
+            return @this == other;
         }
 
         public static string substring(string stringRef, string startIndex, string length, string inputJson)
