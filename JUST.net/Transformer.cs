@@ -16,7 +16,6 @@ namespace JUST
             JsonReader reader = new JsonTextReader(new StringReader(inputJson));
             reader.DateParseHandling = DateParseHandling.None;
             JToken token = JObject.Load(reader);
-            //JToken token = JObject.Parse(inputJson);
 
             JToken selectedToken = token.SelectToken(jsonPath);
             return GetValue(selectedToken);
@@ -80,9 +79,9 @@ namespace JUST
         /// <param name="other">Value to compare with</param>
         /// <param name="inputJson">Json object</param>
         /// <returns>True if the objects are equal</returns>
-        public static bool equals(string @this, string other, string inputJson)
+        public static bool equals(object @this, object other, string inputJson)
         {
-            return @this == other;
+            return @this?.ToString()?.ToLower() == other?.ToString()?.ToLower();
         }
 
         public static string substring(string stringRef, string startIndex, string length, string inputJson)
@@ -181,6 +180,28 @@ namespace JUST
         #endregion
 
         #region aggregate functions
+        public static string findfirstinarray(string array, bool predicate, string inputJson)
+        {
+            try
+            {
+                JArray parsedArray = JArray.Parse(array);
+        
+                double integerresult = 0;
+        
+                if (parsedArray != null)
+                {
+                    foreach (JToken token in parsedArray.Children())
+                    {
+        
+                        integerresult += Convert.ToDouble(token.ToString());
+                    }
+                }
+        
+                return integerresult.ToString();
+            }
+            catch { return null; }
+        }
+
         public static string sum(string array, string inputJson)
         {
             try
