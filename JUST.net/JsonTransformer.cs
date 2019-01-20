@@ -599,9 +599,9 @@ namespace JUST
 
                 if (functionName == "currentvalue" || functionName == "currentindex" || functionName == "lastindex"
                     || functionName == "lastvalue")
-                    output = ReflectionHelper.caller(null, "JUST.Transformer", functionName, new object[] { array, currentArrayElement });
+                    output = ReflectionHelper.InvokeFunction(null, "JUST.Transformer", functionName, new object[] { array, currentArrayElement });
                 else if (functionName == "currentvalueatpath" || functionName == "lastvalueatpath")
-                    output = ReflectionHelper.caller(null, "JUST.Transformer", functionName, new object[] { array, currentArrayElement, arguments[0] });
+                    output = ReflectionHelper.InvokeFunction(null, "JUST.Transformer", functionName, new object[] { array, currentArrayElement, arguments[0] });
                 else if (functionName == "customfunction")
                     output = CallCustomFunction(parameters);
                 else if (Regex.IsMatch(functionName, ReflectionHelper.EXTERNAL_ASSEMBLY_REGEX)){
@@ -615,7 +615,7 @@ namespace JUST
                 {
                     object[] oParams = new object[1];
                     oParams[0] = parameters;
-                    output = ReflectionHelper.caller(null, "JUST.Transformer", functionName, oParams);
+                    output = ReflectionHelper.InvokeFunction(null, "JUST.Transformer", functionName, oParams);
                 }
                 else
                 {
@@ -623,7 +623,7 @@ namespace JUST
                     {
                         parameters[i] = JsonConvert.SerializeObject(currentArrayElement);
                     }
-                    output = ReflectionHelper.caller(null, "JUST.Transformer", functionName, parameters);
+                    output = ReflectionHelper.InvokeFunction(null, "JUST.Transformer", functionName, parameters);
                 }
 
                 return output;
@@ -660,7 +660,7 @@ namespace JUST
 
             className = className + "," + dllName;
 
-            return ReflectionHelper.caller(null, className, functionName, customParameters);
+            return ReflectionHelper.InvokeFunction(null, className, functionName, customParameters);
 
         }
         #endregion

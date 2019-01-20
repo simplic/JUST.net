@@ -9,6 +9,11 @@
       <subsrting>#substring(#valueof($.stringref),8,10)</subsrting>
       <concat>#concat(#valueof($.menu.id.file),#valueof($.menu.value.Window))</concat>
     </stringresult>
+    <boolresult>
+      <equals>#equals(#valueof($.menu.id.file),#valueof($.menu.value.Window))</equals>
+      <equals_val>#equals(#valueof($.menu.id.file),csv)</equals_val>
+      <equals_value>#equals(Value1,Value2)</equals_value>
+    </boolresult>
     <mathresult>
       <add>#add(#valueof($.numbers[0]),3)</add>
       <subtract>#subtract(#valueof($.numbers[4]),#valueof($.numbers[0]))</subtract>

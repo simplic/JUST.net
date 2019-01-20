@@ -12,7 +12,7 @@ namespace JUST
     {
         internal const string EXTERNAL_ASSEMBLY_REGEX = "([\\w.]+)[:]{2}([\\w.]+)[:]{0,2}([\\w.]*)";
 
-        internal static object caller(Assembly assembly, String myclass, String mymethod, object[] parameters, bool convertParameters = false)
+        internal static object InvokeFunction(Assembly assembly, String myclass, String mymethod, object[] parameters, bool convertParameters = false)
         {
             Type type = assembly?.GetType(myclass) ?? Type.GetType(myclass);
             MethodInfo methodInfo = type.GetTypeInfo().GetMethod(mymethod);
@@ -42,7 +42,7 @@ namespace JUST
             var assembly = GetAssembly(isAssemblyDefined, assemblyName, namespc, methodName);
             if (assembly != null)
             {
-                return caller(assembly, namespc, methodName, FilterParameters(parameters), true);
+                return InvokeFunction(assembly, namespc, methodName, FilterParameters(parameters), true);
             }
 
             throw new MissingMethodException((assemblyName != null ? $"{assemblyName}." : string.Empty) + $"{namespc}.{methodName}");
