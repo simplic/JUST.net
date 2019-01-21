@@ -19,7 +19,13 @@ namespace JUST
             return result;
         }
 
-       
+        public static JArray ParseOrGetEmpty(string arrayTokens)
+        {
+            if (string.IsNullOrWhiteSpace(arrayTokens))
+                arrayTokens = "[]";
+
+            return JArray.Parse(arrayTokens);
+        }
 
         private static Dictionary<string, string>  PopulateRecursively(JToken parent, Dictionary<string, string> result)
         {

@@ -7,6 +7,39 @@ using Newtonsoft.Json.Linq;
 using System.Globalization;
 using System.IO;
 
+namespace Simplic.Cloud.DataPort.Service.CustomJUST
+{
+    public class Str2DateTime
+    {
+        public static string str2datetime(string str)
+        {
+            if (string.IsNullOrEmpty(str))
+                return str;
+
+            if (str.Length < 14)
+                return str;
+
+            try
+            {
+                var year = str.Substring(0, 4);
+                var month = str.Substring(4, 2);
+                var day = str.Substring(6, 2);
+
+                var hour = str.Substring(8, 2);
+                var minute = str.Substring(10, 2);
+                var second = str.Substring(12, 2);
+
+                return $"{year}-{month}-{day} {hour}:{minute}:{second}";
+            }
+            catch (System.Exception ex)
+            {
+                return str;
+                // todo: log the error
+            }
+        }
+    }
+}
+
 namespace JUST
 {
     internal class Transformer
@@ -136,7 +169,7 @@ namespace JUST
         {
             string result = null;
 
-            JArray parsedArray = JArray.Parse(array);
+            JArray parsedArray = Utilities.ParseOrGetEmpty(array);
 
             if (parsedArray != null)
             {
@@ -155,7 +188,7 @@ namespace JUST
         {
             string result = null;
 
-            JArray parsedArray = JArray.Parse(array);
+            JArray parsedArray = Utilities.ParseOrGetEmpty(array);
 
             if (parsedArray != null)
             {
@@ -184,7 +217,7 @@ namespace JUST
         {
             string result = null;
 
-            JArray parsedArray = JArray.Parse(array);
+            JArray parsedArray = Utilities.ParseOrGetEmpty(array);
 
             if (parsedArray != null)
             {
@@ -192,6 +225,9 @@ namespace JUST
                 foreach (JToken token in parsedArray.Children())
                 {
                     JToken selectedToken = token.SelectToken(jsonPath);
+
+                    if (selectedToken == null)
+                        continue;
 
                     if (result == null)
                         result = string.Empty;
@@ -207,7 +243,7 @@ namespace JUST
         {
             string result = null;
 
-            JArray parsedArray = JArray.Parse(array);
+            JArray parsedArray = Utilities.ParseOrGetEmpty(array);
 
             if (parsedArray != null)
             {
@@ -215,6 +251,9 @@ namespace JUST
                 foreach (JToken token in parsedArray.Children())
                 {
                     JToken selectedToken = token.SelectToken(jsonPath);
+
+                    if (selectedToken == null)
+                        continue;
 
                     if (result == null)
                         result = string.Empty;
@@ -267,7 +306,7 @@ namespace JUST
         {
             try
             {
-                JArray parsedArray = JArray.Parse(array);
+                JArray parsedArray = Utilities.ParseOrGetEmpty(array);
                 return parsedArray.Count;
             }
             catch { return null; }
@@ -277,7 +316,7 @@ namespace JUST
         {
             try
             {
-                JArray parsedArray = JArray.Parse(array);
+                JArray parsedArray = Utilities.ParseOrGetEmpty(array);
 
                 double integerresult = 0;
 
@@ -301,7 +340,7 @@ namespace JUST
             {
                 double integerresult = 0;
 
-                JArray parsedArray = JArray.Parse(array);
+                JArray parsedArray = Utilities.ParseOrGetEmpty(array);
 
                 if (parsedArray != null)
                 {
@@ -325,7 +364,7 @@ namespace JUST
         {
             try
             {
-                JArray parsedArray = JArray.Parse(array);
+                JArray parsedArray = Utilities.ParseOrGetEmpty(array);
 
                 double integerresult = 0;
 
@@ -349,7 +388,7 @@ namespace JUST
             {
                 double integerresult = 0;
 
-                JArray parsedArray = JArray.Parse(array);
+                JArray parsedArray = Utilities.ParseOrGetEmpty(array);
 
                 if (parsedArray != null)
                 {
@@ -373,7 +412,7 @@ namespace JUST
         {
             try
             {
-                JArray parsedArray = JArray.Parse(array);
+                JArray parsedArray = Utilities.ParseOrGetEmpty(array);
 
                 double integerresult = 0;
                 int i = 0;
@@ -408,7 +447,7 @@ namespace JUST
                 double integerresult = 0;
                 int i = 0;
 
-                JArray parsedArray = JArray.Parse(array);
+                JArray parsedArray = Utilities.ParseOrGetEmpty(array);
 
                 if (parsedArray != null)
                 {
@@ -446,7 +485,7 @@ namespace JUST
         {
             try
             {
-                JArray parsedArray = JArray.Parse(array);
+                JArray parsedArray = Utilities.ParseOrGetEmpty(array);
 
                 double integerresult = 0;
                 int i = 0;
@@ -481,7 +520,7 @@ namespace JUST
                 double integerresult = 0;
                 int i = 0;
 
-                JArray parsedArray = JArray.Parse(array);
+                JArray parsedArray = Utilities.ParseOrGetEmpty(array);
 
                 if (parsedArray != null)
                 {
@@ -515,7 +554,7 @@ namespace JUST
         {
             try
             {
-                JArray parsedArray = JArray.Parse(array);
+                JArray parsedArray = Utilities.ParseOrGetEmpty(array);
 
 
                 return parsedArray.Count.ToString();
