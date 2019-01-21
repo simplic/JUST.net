@@ -10,6 +10,8 @@ namespace JUST
 {
     public class JsonTransformer
     {
+        private const string DefaultTransformerNamespace = "JUST.Transformer";
+
         public static string Transform(string transformerJson, string inputJson)
         {
             JToken result = null;
@@ -275,7 +277,8 @@ namespace JUST
                         reader.DateParseHandling = DateParseHandling.None;
                         JToken token = JObject.Load(reader);
                         JToken arrayToken = null;
-                        if (strArrayToken.Contains("#"))
+
+                        if (strArrayToken.Contains("#") && !strArrayToken.Trim().StartsWith("#"))
                         {
                             int sIndex = strArrayToken.IndexOf("#");
                             string sub1 = strArrayToken.Substring(0, sIndex);
@@ -291,20 +294,29 @@ namespace JUST
                                 strArrayToken = sub1 + functionResult + sub2;
                             }
                         }
-                        try
-                        {
-                            arrayToken = token.SelectToken(strArrayToken);
 
-                            if (arrayToken is JObject)
-                            {
-                                arrayToken = new JArray(arrayToken);
-                            }
+                        if (strArrayToken.Trim().StartsWith("#"))
+                        {
+                            arrayToken = ParseFunction(strArrayToken, inputJson, parentArray, currentArrayToken) as JArray;
                         }
-                        catch
-                        {
-                            var multipleTokens = token.SelectTokens(strArrayToken);
 
-                            arrayToken = new JArray(multipleTokens);
+                        if (arrayToken == null)
+                        {
+                            try
+                            {
+                                arrayToken = token.SelectToken(strArrayToken);
+
+                                if (arrayToken is JObject)
+                                {
+                                    arrayToken = new JArray(arrayToken);
+                                }
+                            }
+                            catch
+                            {
+                                var multipleTokens = token.SelectTokens(strArrayToken);
+
+                                arrayToken = new JArray(multipleTokens);
+                            }
                         }
 
                         if (arrayToken == null)
@@ -594,13 +606,46 @@ namespace JUST
                 parameters[i] = inputJson;
 
                 if (functionName == "getroot")
-                    output = inputJson; 
+                    output = inputJson;
                 else if (functionName == "getparent")
                 {
                     if (currentArrayElement == null)
                         throw new Exception("getparent is only allowed inside loop.");
 
                     output = currentArrayElement.Parent.ToString();
+                }
+                else if (functionName == "createarray")
+                {
+                    var newArray = new JArray();
+
+                    var arrayCount = int.Parse(parameters[0].ToString());
+                    var arrayItemName = parameters[1].ToString();
+                    var makeArrayValueParameters = parameters.Skip(2).ToList();
+
+                    for (int elementId = 0; elementId < arrayCount; elementId++)
+                    {
+                        var arrayItem = new JObject();
+
+                        string lastParameterName = null;
+                        for (int parameterId = 0; parameterId < makeArrayValueParameters.Count; parameterId++)
+                        {
+                            if (parameterId % 2 == 0)
+                                lastParameterName = parameters[parameterId].ToString();
+                            if (parameterId % 2 != 0)
+                            {
+                                arrayItem.Add(new JProperty(lastParameterName, parameters[parameterId]));
+
+                                lastParameterName = "";
+                            }
+                        }
+
+                        if (lastParameterName != "")
+                            arrayItem.Add(new JProperty(lastParameterName, null));
+
+                        newArray.Add(arrayItem);
+                    }
+                    
+                    output = newArray;
                 }
                 else if (functionName == "currentvalue" || functionName == "currentindex" || functionName == "lastindex"
                     || functionName == "lastvalue")
@@ -621,7 +666,7 @@ namespace JUST
                 {
                     object[] oParams = new object[1];
                     oParams[0] = parameters;
-                    output = ReflectionHelper.InvokeFunction(null, "JUST.Transformer", functionName, oParams);
+                    output = ReflectionHelper.InvokeFunction(null, DefaultTransformerNamespace, functionName, oParams);
                 }
                 else
                 {
@@ -629,7 +674,7 @@ namespace JUST
                     {
                         parameters[i] = JsonConvert.SerializeObject(currentArrayElement);
                     }
-                    output = ReflectionHelper.InvokeFunction(null, "JUST.Transformer", functionName, parameters);
+                    output = ReflectionHelper.InvokeFunction(null, DefaultTransformerNamespace, functionName, parameters);
                 }
 
                 return output;
@@ -672,8 +717,11 @@ namespace JUST
         #endregion
 
         #region GetArguments
-        private static string[] GetArguments(string functionString)
+        private static string[] GetArguments(string rawArgument)
         {
+            if (rawArgument.Trim() == "")
+                return new string[] { };
+
             bool brackettOpen = false;
 
             List<string> arguments = null;
@@ -683,14 +731,14 @@ namespace JUST
             int closebrackettCount = 0;
             var currentArgument = "";
 
-            for (int i = 0; i < functionString.Length; i++)
+            for (int i = 0; i < rawArgument.Length; i++)
             {
                 if (index != 0)
-                    currentArgument = functionString.Substring(index + 1, i - index - 1);
+                    currentArgument = rawArgument.Substring(index + 1, i - index - 1);
                 else
-                    currentArgument = functionString.Substring(index, i);
+                    currentArgument = rawArgument.Substring(index, i);
 
-                char currentChar = functionString[i];
+                char currentChar = rawArgument[i];
 
                 if (currentArgument.Trim().StartsWith("#"))
                 {
@@ -720,13 +768,13 @@ namespace JUST
 
             if (index > 0)
             {
-                arguments.Add(functionString.Substring(index + 1, functionString.Length - index - 1));
+                arguments.Add(rawArgument.Substring(index + 1, rawArgument.Length - index - 1));
             }
             else
             {
                 if (arguments == null)
                     arguments = new List<string>();
-                arguments.Add(functionString);
+                arguments.Add(rawArgument);
             }
 
             return arguments.ToArray();

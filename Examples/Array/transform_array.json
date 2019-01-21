@@ -3,11 +3,18 @@
     "#loop($.root.items.address)": {
       "id": "#currentvalueatpath($.id)",
       "maxAge": "#maxatpath(#getarray(#getroot(), #xconcat($.root.items.inhabitant[?(@.addressId==',#currentvalueatpath($.id),')])), $.data.age)",
+      "ageSum": "#sumatpath(#getarray(#getroot(), #xconcat($.root.items.inhabitant[?(@.addressId==',#currentvalueatpath($.id),')])), $.data.age)",
       "inhabitants": {
         "#loop($.root.items.inhabitant[?(@.addressId=='#currentvalueatpath($.id)')])": {
           "firstName": "#currentvalueatpath($.firstName)",
           "lastName": "#currentvalueatpath($.lastName)",
-          "parentId": "#valueof(#xconcat($.root.items.address[?(@.id==',#currentvalueatpath($.addressId),')].id))"
+          "parentId": "#valueof(#xconcat($.root.items.address[?(@.id==',#currentvalueatpath($.addressId),')].id))",
+          "parentStret": "#valueof(#xconcat($.root.items.address[?(@.id==',#currentvalueatpath($.addressId),')].street))"
+        }
+      },
+      "counter_array": {
+        "#loop(#createarray(3,count_item,parentId,#currentvalueatpath($.id)))": {
+          "id": "#currentvalueatpath($.parentId)"
         }
       }
     }

@@ -21,6 +21,16 @@ namespace JUST
             return GetValue(selectedToken);
         }
 
+        public static string getcurrentscopeasstring(string inputJson)
+        {
+            return inputJson;
+        }
+
+        public static string tostring(object input, string inputJson)
+        {
+            return input?.ToString();
+        }
+
         public static object getarray(string document, string jsonPath, string inputJson)
         {
             JsonReader reader = new JsonTextReader(new StringReader(document));
@@ -490,12 +500,12 @@ namespace JUST
 
         #region Constants
 
-        public static string constant_comma(string none, string inputJson)
+        public static string constant_comma(string inputJson)
         {
             return ",";
         }
 
-        public static string constant_hash(string none, string inputJson)
+        public static string constant_hash(string inputJson)
         {
             return "#";
         }

@@ -21,7 +21,7 @@ namespace JUST.NET.Test
             Console.WriteLine("################################################################################################");
             Console.WriteLine(transformedArrayJson);
             File.WriteAllText("Examples/Array/output_array.json", transformedArrayJson);
-            
+            return;
             string input = File.ReadAllText("Examples/Input.json");
 
             string transformer = File.ReadAllText("Examples/Transformer_valueof.json"); 
