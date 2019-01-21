@@ -16,12 +16,26 @@ namespace JUST
             JsonReader reader = new JsonTextReader(new StringReader(inputJson));
             reader.DateParseHandling = DateParseHandling.None;
             JToken token = JObject.Load(reader);
-            //JToken token = JObject.Parse(inputJson);
 
             JToken selectedToken = token.SelectToken(jsonPath);
             return GetValue(selectedToken);
         }
 
+        public static object getarray(string document, string jsonPath, string inputJson)
+        {
+            JsonReader reader = new JsonTextReader(new StringReader(document));
+            reader.DateParseHandling = DateParseHandling.None;
+            JToken token = JObject.Load(reader);
+
+            var jsonArrayToken = token.SelectTokens(jsonPath).ToList();
+            var array = new JArray();
+            foreach (var arrayToken in jsonArrayToken)
+                array.Add(arrayToken);
+
+            var arrayAsString = array.ToString();
+
+            return arrayAsString;
+        }
 
         public static string exists(string jsonPath, string inputJson)
         {
@@ -332,7 +346,10 @@ namespace JUST
 
                 return integerresult.ToString();
             }
-            catch { return null; }
+            catch(Exception ex)
+            {
+                return null;
+            }
         }
 
 

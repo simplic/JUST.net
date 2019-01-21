@@ -63,6 +63,12 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Examples\Array\input_array.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Examples\Array\transform_array.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Examples\DataTransformer.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -170,6 +176,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Examples\Array\base.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Examples\DataTransformer.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

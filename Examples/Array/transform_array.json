@@ -1,0 +1,15 @@
+{
+  "addresses": {
+    "#loop($.root.items.address)": {
+      "id": "#currentvalueatpath($.id)",
+      "maxAge": "#maxatpath(#getarray(#getroot(), #xconcat($.root.items.inhabitant[?(@.addressId==',#currentvalueatpath($.id),')])), $.data.age)",
+      "inhabitants": {
+        "#loop($.root.items.inhabitant[?(@.addressId=='#currentvalueatpath($.id)')])": {
+          "firstName": "#currentvalueatpath($.firstName)",
+          "lastName": "#currentvalueatpath($.lastName)",
+          "parentId": "#valueof(#xconcat($.root.items.address[?(@.id==',#currentvalueatpath($.addressId),')].id))"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "root": {
+    "items": {
+      "address": [
+        {
+          "id": "001024",
+          "street": "Sample street",
+          "houseNr": "1"
+        },
+        {
+          "id": "003303",
+          "street": "L-Street",
+          "houseNr": "23"
+        }
+      ],
+      "inhabitant": [
+        {
+          "addressId": "001024",
+          "firstName": "Max",
+          "lastName": "Sample",
+          "data": { "age": "25" }
+        },
+        {
+          "addressId": "001024",
+          "firstName": "Mina",
+          "lastName": "Sample",
+          "data": { "age": "26" }
+        },
+        {
+          "addressId": "003303",
+          "firstName": "Laura",
+          "lastName": "Rickfield",
+          "data": { "age": "54" }
+        }
+      ]
+    }
+  }
+}

@@ -80,9 +80,6 @@ namespace JUST
 
             foreach (JToken childToken in tokens)
             {
-
-
-
                 if (childToken.Type == JTokenType.Array && (parentToken as JProperty).Name.Trim() != "#")
                 {
                     JArray arrayToken = childToken as JArray;
@@ -159,7 +156,7 @@ namespace JUST
                     }
 
                     if (property.Name != null && property.Value.ToString().Trim().StartsWith("#")
-                        && !property.Name.Contains("#eval")  && !property.Name.Contains("#ifgroup")
+                        && !property.Name.Contains("#eval") && !property.Name.Contains("#ifgroup")
                         && !property.Name.Contains("#loop"))
                     {
                         object newValue = ParseFunction(property.Value.ToString(), inputJson, parentArray, currentArrayToken);
@@ -242,7 +239,7 @@ namespace JUST
 
                             if (tokenToForm == null)
                             {
-                                tokenToForm = new List<JToken>();                               
+                                tokenToForm = new List<JToken>();
                             }
 
                             foreach (JToken grandChildToken in childToken.Children())
@@ -308,8 +305,6 @@ namespace JUST
                             var multipleTokens = token.SelectTokens(strArrayToken);
 
                             arrayToken = new JArray(multipleTokens);
-
-
                         }
 
                         if (arrayToken == null)
@@ -351,7 +346,7 @@ namespace JUST
                     /*End looping */
                 }
 
-                if (childToken.Type == JTokenType.String && childToken.Value<string>().Trim().StartsWith("#") 
+                if (childToken.Type == JTokenType.String && childToken.Value<string>().Trim().StartsWith("#")
                     && parentArray != null && currentArrayToken != null)
                 {
 
@@ -367,7 +362,7 @@ namespace JUST
                         }
                         catch
                         {
-                            
+
                         }
                     }
                     else
@@ -581,6 +576,7 @@ namespace JUST
                     {
                         string trimmedArgument = argument;
 
+                        // Missing contains here!
                         if (argument.Contains("#"))
                             trimmedArgument = argument.Trim();
 
@@ -597,20 +593,30 @@ namespace JUST
 
                 parameters[i] = inputJson;
 
-                if (functionName == "currentvalue" || functionName == "currentindex" || functionName == "lastindex"
+                if (functionName == "getroot")
+                    output = inputJson; 
+                else if (functionName == "getparent")
+                {
+                    if (currentArrayElement == null)
+                        throw new Exception("getparent is only allowed inside loop.");
+
+                    output = currentArrayElement.Parent.ToString();
+                }
+                else if (functionName == "currentvalue" || functionName == "currentindex" || functionName == "lastindex"
                     || functionName == "lastvalue")
                     output = ReflectionHelper.caller(null, "JUST.Transformer", functionName, new object[] { array, currentArrayElement });
                 else if (functionName == "currentvalueatpath" || functionName == "lastvalueatpath")
                     output = ReflectionHelper.caller(null, "JUST.Transformer", functionName, new object[] { array, currentArrayElement, arguments[0] });
                 else if (functionName == "customfunction")
                     output = CallCustomFunction(parameters);
-                else if (Regex.IsMatch(functionName, ReflectionHelper.EXTERNAL_ASSEMBLY_REGEX)){
+                else if (Regex.IsMatch(functionName, ReflectionHelper.EXTERNAL_ASSEMBLY_REGEX))
+                {
                     output = ReflectionHelper.CallExternalAssembly(functionName, parameters);
                 }
                 else if (functionName == "xconcat" || functionName == "xadd"
-                    || functionName == "mathequals" || functionName == "mathgreaterthan" || functionName == "mathlessthan" 
+                    || functionName == "mathequals" || functionName == "mathgreaterthan" || functionName == "mathlessthan"
                     || functionName == "mathgreaterthanorequalto"
-                    || functionName == "mathlessthanorequalto" || functionName == "stringcontains" || 
+                    || functionName == "mathlessthanorequalto" || functionName == "stringcontains" ||
                     functionName == "stringequals")
                 {
                     object[] oParams = new object[1];
@@ -675,16 +681,25 @@ namespace JUST
 
             int openBrackettCount = 0;
             int closebrackettCount = 0;
+            var currentArgument = "";
 
             for (int i = 0; i < functionString.Length; i++)
             {
+                if (index != 0)
+                    currentArgument = functionString.Substring(index + 1, i - index - 1);
+                else
+                    currentArgument = functionString.Substring(index, i);
+
                 char currentChar = functionString[i];
 
-                if (currentChar == '(')
-                    openBrackettCount++;
+                if (currentArgument.Trim().StartsWith("#"))
+                {
+                    if (currentChar == '(')
+                        openBrackettCount++;
 
-                if (currentChar == ')')
-                    closebrackettCount++;
+                    if (currentChar == ')')
+                        closebrackettCount++;
+                }
 
                 if (openBrackettCount == closebrackettCount)
                     brackettOpen = false;
@@ -696,10 +711,8 @@ namespace JUST
                     if (arguments == null)
                         arguments = new List<string>();
 
-                    if (index != 0)
-                        arguments.Add(functionString.Substring(index + 1, i - index - 1));
-                    else
-                        arguments.Add(functionString.Substring(index, i));
+                    arguments.Add(currentArgument);
+
                     index = i;
                 }
 
