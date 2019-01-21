@@ -88,6 +88,18 @@ namespace JUST
             return string1 != null ? string1 + string2Result : string.Empty + string2Result;
         }
 
+        /// <summary>
+        /// Compare to values
+        /// </summary>
+        /// <param name="this">Basic value</param>
+        /// <param name="other">Value to compare with</param>
+        /// <param name="inputJson">Json object</param>
+        /// <returns>True if the objects are equal</returns>
+        public static bool equals(string @this, string other, string inputJson)
+        {
+            return @this == other;
+        }
+
         public static string substring(string stringRef, string startIndex, string length, string inputJson)
         {
             try

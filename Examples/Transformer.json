@@ -8,6 +8,11 @@
       "arrayelement": "#valueof($.x[0])",
       "specificelement": "#valueof($.x[1].v.a)"
     },
+    "boolresult": {
+      "equals": "#equals(#valueof($.menu.id.file),#valueof($.menu.value.Window))",
+      "equals_val": "#equals(#valueof($.menu.id.file),csv)",
+      "equals_value": "#equals(Value1,Value2)"
+    },
     "ifconditiontesttrue": "#ifcondition(#valueof($.menu.id.file),csv,#valueof($.menu.value.Window),fail)",
     "ifconditiontestfalse": "#ifcondition(#valueof($.menu.id.file),xml,#valueof($.menu.value.Window),fail)",
     "stringresult": {
