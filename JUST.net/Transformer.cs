@@ -324,6 +324,30 @@ namespace JUST
             catch { return null; }
         }
 
+        public static string firstatpath(string array, string jsonPath, string inputJson)
+        {
+            try
+            {
+                JArray parsedArray = Utilities.ParseOrGetEmpty(array);
+
+                if (parsedArray != null)
+                {
+
+                    foreach (JToken token in parsedArray.Children())
+                    {
+
+                        JToken selectedToken = token.SelectToken(jsonPath);
+
+                        if (selectedToken != null)
+                            return selectedToken?.ToString();
+                    }
+                }
+
+                return null;
+            }
+            catch { return null; }
+        }
+
         public static string average(string array, string inputJson)
         {
             try
