@@ -4,6 +4,8 @@
       "id": "#currentvalueatpath($.id)",
       "maxAge": "#maxatpath(#getarray(#getroot(), #xconcat($.root.items.inhabitant[?(@.addressId==',#currentvalueatpath($.id),')])), $.data.age)",
       "ageSum": "#sumatpath(#getarray(#getroot(), #xconcat($.root.items.inhabitant[?(@.addressId==',#currentvalueatpath($.id),')])), $.data.age)",
+      "listAtPath": "#listallatpath(#getarray(#getroot(), #xconcat($.root.items.inhabitant[?(@.addressId==',#currentvalueatpath($.id),')])), $.firstName,;)",
+      "inhabitantsCount": "#count(#getarray(#getroot(), #xconcat($.root.items.inhabitant[?(@.addressId==',#currentvalueatpath($.id),')])))",
       "inhabitants": {
         "#loop($.root.items.inhabitant[?(@.addressId=='#currentvalueatpath($.id)')])": {
           "firstName": "#currentvalueatpath($.firstName)",

@@ -151,6 +151,35 @@ namespace JUST
             return result;
         }
 
+        public static string listall(string array, string separator, string inputJson)
+        {
+            string result = null;
+
+            JArray parsedArray = JArray.Parse(array);
+
+            if (parsedArray != null)
+            {
+                var isFirstItem = true;
+
+                foreach (JToken token in parsedArray.Children())
+                {
+                    if (result == null)
+                        result = string.Empty;
+
+                    if (!isFirstItem && !string.IsNullOrWhiteSpace(result))
+                    {
+                        result += separator;
+                    }
+
+                    isFirstItem = false;
+
+                    result += token.ToString();
+                }
+            }
+
+            return result;
+        }
+
         public static string concatallatpath(string array, string jsonPath, string inputJson)
         {
             string result = null;
@@ -162,7 +191,6 @@ namespace JUST
 
                 foreach (JToken token in parsedArray.Children())
                 {
-
                     JToken selectedToken = token.SelectToken(jsonPath);
 
                     if (result == null)
@@ -175,6 +203,35 @@ namespace JUST
             return result;
         }
 
+        public static string listallatpath(string array, string jsonPath, string separator, string inputJson)
+        {
+            string result = null;
+
+            JArray parsedArray = JArray.Parse(array);
+
+            if (parsedArray != null)
+            {
+                var isFirstItem = true;
+                foreach (JToken token in parsedArray.Children())
+                {
+                    JToken selectedToken = token.SelectToken(jsonPath);
+
+                    if (result == null)
+                        result = string.Empty;
+
+                    if (!isFirstItem && !string.IsNullOrWhiteSpace(result))
+                    {
+                        result += separator;
+                    }
+
+                    isFirstItem = false;
+
+                    result += selectedToken.ToString();
+                }
+            }
+
+            return result;
+        }
         #endregion
 
         #region math functions
@@ -206,6 +263,16 @@ namespace JUST
         #endregion
 
         #region aggregate functions
+        public static object count(string array, string inputJson)
+        {
+            try
+            {
+                JArray parsedArray = JArray.Parse(array);
+                return parsedArray.Count;
+            }
+            catch { return null; }
+        }
+
         public static string sum(string array, string inputJson)
         {
             try

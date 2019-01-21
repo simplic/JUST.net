@@ -630,10 +630,10 @@ namespace JUST
                         for (int parameterId = 0; parameterId < makeArrayValueParameters.Count; parameterId++)
                         {
                             if (parameterId % 2 == 0)
-                                lastParameterName = parameters[parameterId].ToString();
+                                lastParameterName = makeArrayValueParameters[parameterId].ToString();
                             if (parameterId % 2 != 0)
                             {
-                                arrayItem.Add(new JProperty(lastParameterName, parameters[parameterId]));
+                                arrayItem.Add(new JProperty(lastParameterName, makeArrayValueParameters[parameterId]));
 
                                 lastParameterName = "";
                             }
