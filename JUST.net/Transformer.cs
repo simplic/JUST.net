@@ -119,6 +119,38 @@ namespace JUST
             }
         }
 
+        public static string trimstart(string value, string trimChar, string inputJson)
+        {
+            if (string.IsNullOrEmpty(trimChar))
+                return value;
+
+            return value?.TrimStart(trimChar[0]);
+        }
+
+        public static string trimend(string value, string trimChar, string inputJson)
+        {
+            if (string.IsNullOrEmpty(trimChar))
+                return value;
+
+            return value?.TrimEnd(trimChar[0]);
+        }
+
+        public static string trim(string value, string inputJson)
+        {
+            return value?.Trim();
+        }
+
+        public static string replacestring(string value, string searchString, string replaceString, string inputJson)
+        {
+            if (searchString == null)
+                return value;
+
+            if (replaceString == null)
+                return value;
+
+            return value?.Replace(searchString, replaceString);
+        }
+
         public static string firstindexof(string stringRef, string searchString, string inputJson)
         {
             return stringRef.IndexOf(searchString, 0).ToString();
