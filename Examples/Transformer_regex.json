@@ -1,0 +1,3 @@
+﻿{
+  "regexp": "#regex(An extraordinary day dawns with each new day., \\ba\\w*\\b)"
+}

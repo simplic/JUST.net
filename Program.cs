@@ -213,6 +213,13 @@ namespace JUST.NET.Test
                 (JsonTransformer.Transform(JArray.Parse(transformer), input));
             Console.WriteLine(transformedString);
 
+            Console.WriteLine("################################################################################################");
+
+            transformer = File.ReadAllText("Examples/Transformer_regex.json");
+            transformedString = JsonConvert.SerializeObject
+                (JsonTransformer.Transform(transformer, input));
+            Console.WriteLine(transformedString);
+
             Console.ReadLine();
         }
     }

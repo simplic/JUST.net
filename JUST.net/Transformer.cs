@@ -3,6 +3,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace JUST
 {
@@ -665,6 +666,15 @@ namespace JUST
             return add.ToString();
         }
         #endregion
+
+        public static string regex(string value, string regexPattern, string inputJson)
+        {                        
+            var match = Regex.Match(value, regexPattern, RegexOptions.IgnoreCase);
+            if (match.Success)
+                return match.Value;
+            else
+                return string.Empty;
+        }
 
         public static object GetValue(JToken selectedToken)
         {
