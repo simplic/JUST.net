@@ -668,7 +668,10 @@ namespace JUST
         #endregion
 
         public static string regex(string value, string regexPattern, string inputJson)
-        {                        
+        {
+            if (string.IsNullOrWhiteSpace(value) || string.IsNullOrWhiteSpace(regexPattern))
+                return string.Empty;
+
             var match = Regex.Match(value, regexPattern, RegexOptions.IgnoreCase);
             if (match.Success)
                 return match.Value;
