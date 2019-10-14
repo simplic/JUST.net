@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Globalization;
 using System.IO;
 
 namespace JUST
@@ -16,10 +13,35 @@ namespace JUST
             JsonReader reader = new JsonTextReader(new StringReader(inputJson));
             reader.DateParseHandling = DateParseHandling.None;
             JToken token = JObject.Load(reader);
-            //JToken token = JObject.Parse(inputJson);
 
             JToken selectedToken = token.SelectToken(jsonPath);
             return GetValue(selectedToken);
+        }
+
+        public static string getcurrentscopeasstring(string inputJson)
+        {
+            return inputJson;
+        }
+
+        public static string tostring(object input, string inputJson)
+        {
+            return input?.ToString();
+        }
+
+        public static object getarray(string document, string jsonPath, string inputJson)
+        {
+            JsonReader reader = new JsonTextReader(new StringReader(document));
+            reader.DateParseHandling = DateParseHandling.None;
+            JToken token = JObject.Load(reader);
+
+            var jsonArrayToken = token.SelectTokens(jsonPath).ToList();
+            var array = new JArray();
+            foreach (var arrayToken in jsonArrayToken)
+                array.Add(arrayToken);
+
+            var arrayAsString = array.ToString();
+
+            return arrayAsString;
         }
 
         public static string exists(string jsonPath, string inputJson)
@@ -97,6 +119,38 @@ namespace JUST
             }
         }
 
+        public static string trimstart(string value, string trimChar, string inputJson)
+        {
+            if (string.IsNullOrEmpty(trimChar))
+                return value;
+
+            return value?.TrimStart(trimChar[0]);
+        }
+
+        public static string trimend(string value, string trimChar, string inputJson)
+        {
+            if (string.IsNullOrEmpty(trimChar))
+                return value;
+
+            return value?.TrimEnd(trimChar[0]);
+        }
+
+        public static string trim(string value, string inputJson)
+        {
+            return value?.Trim();
+        }
+
+        public static string replacestring(string value, string searchString, string replaceString, string inputJson)
+        {
+            if (searchString == null)
+                return value;
+
+            if (replaceString == null)
+                return value;
+
+            return value?.Replace(searchString, replaceString);
+        }
+
         public static string firstindexof(string stringRef, string searchString, string inputJson)
         {
             return stringRef.IndexOf(searchString, 0).ToString();
@@ -111,7 +165,7 @@ namespace JUST
         {
             string result = null;
 
-            JArray parsedArray = JArray.Parse(array);
+            JArray parsedArray = Utilities.ParseOrGetEmpty(array);
 
             if (parsedArray != null)
             {
@@ -126,19 +180,50 @@ namespace JUST
             return result;
         }
 
+        public static string listall(string array, string separator, string inputJson)
+        {
+            string result = null;
+
+            JArray parsedArray = Utilities.ParseOrGetEmpty(array);
+
+            if (parsedArray != null)
+            {
+                var isFirstItem = true;
+
+                foreach (JToken token in parsedArray.Children())
+                {
+                    if (result == null)
+                        result = string.Empty;
+
+                    if (!isFirstItem && !string.IsNullOrWhiteSpace(result))
+                    {
+                        result += separator;
+                    }
+
+                    isFirstItem = false;
+
+                    result += token.ToString();
+                }
+            }
+
+            return result;
+        }
+
         public static string concatallatpath(string array, string jsonPath, string inputJson)
         {
             string result = null;
 
-            JArray parsedArray = JArray.Parse(array);
+            JArray parsedArray = Utilities.ParseOrGetEmpty(array);
 
             if (parsedArray != null)
             {
 
                 foreach (JToken token in parsedArray.Children())
                 {
-
                     JToken selectedToken = token.SelectToken(jsonPath);
+
+                    if (selectedToken == null)
+                        continue;
 
                     if (result == null)
                         result = string.Empty;
@@ -150,6 +235,38 @@ namespace JUST
             return result;
         }
 
+        public static string listallatpath(string array, string jsonPath, string separator, string inputJson)
+        {
+            string result = null;
+
+            JArray parsedArray = Utilities.ParseOrGetEmpty(array);
+
+            if (parsedArray != null)
+            {
+                var isFirstItem = true;
+                foreach (JToken token in parsedArray.Children())
+                {
+                    JToken selectedToken = token.SelectToken(jsonPath);
+
+                    if (selectedToken == null)
+                        continue;
+
+                    if (result == null)
+                        result = string.Empty;
+
+                    if (!isFirstItem && !string.IsNullOrWhiteSpace(result))
+                    {
+                        result += separator;
+                    }
+
+                    isFirstItem = false;
+
+                    result += selectedToken.ToString();
+                }
+            }
+
+            return result;
+        }
         #endregion
 
         #region math functions
@@ -181,11 +298,21 @@ namespace JUST
         #endregion
 
         #region aggregate functions
+        public static object count(string array, string inputJson)
+        {
+            try
+            {
+                JArray parsedArray = Utilities.ParseOrGetEmpty(array);
+                return parsedArray.Count;
+            }
+            catch { return null; }
+        }
+
         public static string sum(string array, string inputJson)
         {
             try
             {
-                JArray parsedArray = JArray.Parse(array);
+                JArray parsedArray = Utilities.ParseOrGetEmpty(array);
 
                 double integerresult = 0;
 
@@ -209,7 +336,7 @@ namespace JUST
             {
                 double integerresult = 0;
 
-                JArray parsedArray = JArray.Parse(array);
+                JArray parsedArray = Utilities.ParseOrGetEmpty(array);
 
                 if (parsedArray != null)
                 {
@@ -229,11 +356,35 @@ namespace JUST
             catch { return null; }
         }
 
+        public static string firstatpath(string array, string jsonPath, string inputJson)
+        {
+            try
+            {
+                JArray parsedArray = Utilities.ParseOrGetEmpty(array);
+
+                if (parsedArray != null)
+                {
+
+                    foreach (JToken token in parsedArray.Children())
+                    {
+
+                        JToken selectedToken = token.SelectToken(jsonPath);
+
+                        if (selectedToken != null)
+                            return selectedToken?.ToString();
+                    }
+                }
+
+                return null;
+            }
+            catch { return null; }
+        }
+
         public static string average(string array, string inputJson)
         {
             try
             {
-                JArray parsedArray = JArray.Parse(array);
+                JArray parsedArray = Utilities.ParseOrGetEmpty(array);
 
                 double integerresult = 0;
 
@@ -257,7 +408,7 @@ namespace JUST
             {
                 double integerresult = 0;
 
-                JArray parsedArray = JArray.Parse(array);
+                JArray parsedArray = Utilities.ParseOrGetEmpty(array);
 
                 if (parsedArray != null)
                 {
@@ -281,7 +432,7 @@ namespace JUST
         {
             try
             {
-                JArray parsedArray = JArray.Parse(array);
+                JArray parsedArray = Utilities.ParseOrGetEmpty(array);
 
                 double integerresult = 0;
                 int i = 0;
@@ -316,7 +467,7 @@ namespace JUST
                 double integerresult = 0;
                 int i = 0;
 
-                JArray parsedArray = JArray.Parse(array);
+                JArray parsedArray = Utilities.ParseOrGetEmpty(array);
 
                 if (parsedArray != null)
                 {
@@ -343,7 +494,10 @@ namespace JUST
 
                 return integerresult.ToString();
             }
-            catch { return null; }
+            catch(Exception ex)
+            {
+                return null;
+            }
         }
 
 
@@ -351,7 +505,7 @@ namespace JUST
         {
             try
             {
-                JArray parsedArray = JArray.Parse(array);
+                JArray parsedArray = Utilities.ParseOrGetEmpty(array);
 
                 double integerresult = 0;
                 int i = 0;
@@ -386,7 +540,7 @@ namespace JUST
                 double integerresult = 0;
                 int i = 0;
 
-                JArray parsedArray = JArray.Parse(array);
+                JArray parsedArray = Utilities.ParseOrGetEmpty(array);
 
                 if (parsedArray != null)
                 {
@@ -420,7 +574,7 @@ namespace JUST
         {
             try
             {
-                JArray parsedArray = JArray.Parse(array);
+                JArray parsedArray = Utilities.ParseOrGetEmpty(array);
 
 
                 return parsedArray.Count.ToString();
@@ -472,12 +626,12 @@ namespace JUST
 
         #region Constants
 
-        public static string constant_comma(string none, string inputJson)
+        public static string constant_comma(string inputJson)
         {
             return ",";
         }
 
-        public static string constant_hash(string none, string inputJson)
+        public static string constant_hash(string inputJson)
         {
             return "#";
         }

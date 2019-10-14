@@ -348,6 +348,28 @@ Output:-
 }
 ```
 
+## Select array using a json path
+
+`getarray(<start-object>, <selector>)` allows to select an array by using json path. The search is relative to the start object.
+
+Transformer:-
+
+```json
+{
+	"array": #getarray(#getroot(), $.root.items.inhabitant[?(@.firstname=='Max')]))
+}
+```
+
+## Document navigation
+
+**getroot**
+
+Returns the root document.
+
+**getparent**
+
+
+
 ## Bulk functions
 
 All the above functions set property values to predefined properties in the output JSON. However, in some cases we don't know what our output will look like as it depends on the input.

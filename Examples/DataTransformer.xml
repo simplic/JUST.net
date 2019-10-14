@@ -54,5 +54,18 @@
       <SomeValue>#valueof($.LogId)</SomeValue>
     </Record>}
   </iteration>
-  
+  <newArray>
+    <item>
+      <nr>1</nr>
+      <value>#valueof($.menu.id.file)</value>
+    </item>
+    <item>
+      <nr>2</nr>
+      <value>#valueof($.menu.id.file)</value>
+    </item>
+    <item>
+      <nr>3</nr>
+      <value>#valueof($.menu.id.file)</value>
+    </item>
+  </newArray>
 </root>

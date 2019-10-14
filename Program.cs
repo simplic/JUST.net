@@ -14,6 +14,14 @@ namespace JUST.NET.Test
     {
         public static void Main(string[] args)
         {
+            string inputArrayJson = File.ReadAllText("Examples/Array/input_array.json");
+
+            string transformerArrayJson = File.ReadAllText("Examples/Array/transform_array.json");
+            string transformedArrayJson = JsonTransformer.Transform(transformerArrayJson, inputArrayJson);
+            Console.WriteLine("################################################################################################");
+            Console.WriteLine(transformedArrayJson);
+            File.WriteAllText("Examples/Array/output_array.json", transformedArrayJson);
+            
             string input = File.ReadAllText("Examples/Input.json");
 
             string transformer = File.ReadAllText("Examples/Transformer_valueof.json"); 
