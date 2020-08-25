@@ -37,19 +37,10 @@ steps:
     solution: 'JUST.NET.Test.sln'
     configuration: '$(buildConfiguration)'
 
-- task: VSTest@2
-  inputs:
-    testSelector: 'testAssemblies'
-    testAssemblyVer2: |
-      **\JUST.NET.Test.dll
-      !**\*TestAdapter.dll
-      !**\obj\**
-    searchFolder: 'src'
-
 - task: NuGetCommand@2
   inputs:
     command: 'pack'
-    packagesToPack: 'src/**/JUST.net.csproj;!src/JUST.NET.Test/JUST.NET.Test.csproj'
+    packagesToPack: 'src/**/JUST.net.csproj;!src/**/JUST.NET.Test.csproj'
     configuration: '$(buildConfiguration)'
     versioningScheme: 'off'
 
