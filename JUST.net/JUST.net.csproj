@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -14,6 +14,9 @@ This will repace the JUST and JUST.NETCore packages.</Description>
     <PackageReleaseNotes>Fixed the following issues:-
 https://github.com/WorkMaze/JUST.net/issues/26
 https://github.com/WorkMaze/JUST.net/issues/25</PackageReleaseNotes>
+    <AssemblyVersion>5.6.20.825</AssemblyVersion>
+    <FileVersion>5.6.20.825</FileVersion>
+    <Version>5.6.20</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -21,7 +24,7 @@ https://github.com/WorkMaze/JUST.net/issues/25</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>bin\Release</OutputPath>
+    <OutputPath>bin\Debug</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
