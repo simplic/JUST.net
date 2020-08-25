@@ -40,7 +40,7 @@ steps:
 - task: NuGetCommand@2
   inputs:
     command: 'pack'
-    packagesToPack: 'src/**/JUST.net.csproj;!src/**/JUST.NET.Test.csproj'
+    packagesToPack: '**/JUST.net.csproj;!**/JUST.NET.Test.csproj'
     configuration: '$(buildConfiguration)'
     versioningScheme: 'off'
 
