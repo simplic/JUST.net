@@ -9,7 +9,7 @@ This will repace the JUST and JUST.NETCore packages.</Description>
     <PackageLicenseUrl>https://github.com/WorkMaze/JUST.net/blob/master/License.md</PackageLicenseUrl>
     <PackageTags>C#;.NET;JSON;XSLT;Transformation;Schema</PackageTags>
     <RepositoryUrl>https://github.com/WorkMaze/JUST.net</RepositoryUrl>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageReleaseNotes>Fixed the following issues:-
 https://github.com/WorkMaze/JUST.net/issues/26
