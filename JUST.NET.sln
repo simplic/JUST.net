@@ -13,16 +13,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ENV", "ENV", "{FF566713-3F0
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JUST.Net.Test", "JUST.Net.Test\JUST.Net.Test.csproj", "{4D2D7084-412B-4782-A687-BA2C22D3D14B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{507F2FFD-22BD-433E-9CEC-0B210DF18ED3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{507F2FFD-22BD-433E-9CEC-0B210DF18ED3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{507F2FFD-22BD-433E-9CEC-0B210DF18ED3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{507F2FFD-22BD-433E-9CEC-0B210DF18ED3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C33053BC-A3F2-4F0A-9B7F-B0AF5AD4EFFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C33053BC-A3F2-4F0A-9B7F-B0AF5AD4EFFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C33053BC-A3F2-4F0A-9B7F-B0AF5AD4EFFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -31,6 +29,10 @@ Global
 		{15F60FAC-38CF-4AA7-B369-E738702AA94E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15F60FAC-38CF-4AA7-B369-E738702AA94E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15F60FAC-38CF-4AA7-B369-E738702AA94E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D2D7084-412B-4782-A687-BA2C22D3D14B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D2D7084-412B-4782-A687-BA2C22D3D14B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D2D7084-412B-4782-A687-BA2C22D3D14B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D2D7084-412B-4782-A687-BA2C22D3D14B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

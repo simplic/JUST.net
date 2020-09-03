@@ -37,6 +37,14 @@ steps:
     solution: 'JUST.NET.sln'
     configuration: '$(buildConfiguration)'
 
+- task: DotNetCoreCLI@2
+  displayName: 'Run unit tests - $(buildConfiguration)'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/'
+    publishTestResults: true
+    projects: '**/*.Test.csproj'
+
 - task: NuGetCommand@2
   inputs:
     command: 'pack'
