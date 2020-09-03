@@ -579,6 +579,11 @@ namespace JUST
 
         #region ParseFunction
 
+        private object ExecuteExpression(string expression, string inputJson)
+        {
+            return null;  
+        }
+
         private object ParseFunction(string functionString, string inputJson, JArray array, JToken currentArrayElement)
         {
             try
