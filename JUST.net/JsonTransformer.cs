@@ -12,6 +12,13 @@ namespace JUST
     {
         private const string DefaultTransformerNamespace = "JUST.Transformer";
 
+        #region [Transform]
+        /// <summary>
+        /// Transform json by json as string
+        /// </summary>
+        /// <param name="transformerJson">Transformer as .net string</param>
+        /// <param name="inputJson">Input as .net string (json)</param>
+        /// <returns></returns>
         public string Transform(string transformerJson, string inputJson)
         {
             JToken transformerToken = JToken.Parse(transformerJson);
@@ -33,6 +40,12 @@ namespace JUST
             return output;
         }
 
+        /// <summary>
+        /// Transform json array (JArray)
+        /// </summary>
+        /// <param name="transformerArray">Transformer as array</param>
+        /// <param name="inputJson">Input as .net string (json)</param>
+        /// <returns>Transformed json</returns>
         public JArray Transform(JArray transformerArray, string input)
         {
             var result = new JArray();
@@ -48,21 +61,32 @@ namespace JUST
             return result;
         }
 
+        /// <summary>
+        /// Transform JObject by using a JObject transformer
+        /// </summary>
+        /// <param name="transformer">Transformer as NewtonsoftJson object</param>
+        /// <param name="input">Input as Newtonsoft.Json object</param>
+        /// <returns>Transformed json as JObject</returns>
         public JObject Transform(JObject transformer, JObject input)
         {
             string inputJson = JsonConvert.SerializeObject(input);
             return Transform(transformer, inputJson);
         }
 
+        /// <summary>
+        /// Transform json by using a JObject
+        /// </summary>
+        /// <param name="transformer">Transformer as JObject</param>
+        /// <param name="input">Json to transform</param>
+        /// <returns>Transformed JObject</returns>
         public JObject Transform(JObject transformer, string input)
         {
             RecursiveEvaluate(transformer, input, null, null);
             return transformer;
         }
+        #endregion
 
         #region RecursiveEvaluate
-
-
         private void RecursiveEvaluate(JToken parentToken, string inputJson, JArray parentArray, JToken currentArrayToken)
         {
             if (parentToken == null)
@@ -720,10 +744,9 @@ namespace JUST
 
             int openBrackettCount = 0;
             int closebrackettCount = 0;
-            var currentArgument = "";
-
             for (int i = 0; i < rawArgument.Length; i++)
             {
+                string currentArgument;
                 if (index != 0)
                     currentArgument = rawArgument.Substring(index + 1, i - index - 1);
                 else
@@ -769,65 +792,6 @@ namespace JUST
             }
 
             return arguments.ToArray();
-        }
-        #endregion
-
-        #region Split
-        public IEnumerable<string> SplitJson(string input, string arrayPath)
-        {
-            JObject inputJObject = JObject.Parse(input);
-
-            List<JObject> jObjects = SplitJson(inputJObject, arrayPath).ToList<JObject>();
-
-            List<string> output = null;
-
-            foreach (JObject jObject in jObjects)
-            {
-                if (output == null)
-                    output = new List<string>();
-
-                output.Add(JsonConvert.SerializeObject(jObject));
-            }
-
-            return output;
-        }
-
-        public IEnumerable<JObject> SplitJson(JObject input, string arrayPath)
-        {
-            List<JObject> jsonObjects = null;
-
-            JToken tokenArr = input.SelectToken(arrayPath);
-
-            string pathToReplace = tokenArr.Path;
-
-            if (tokenArr != null && tokenArr is JArray)
-            {
-                JArray array = tokenArr as JArray;
-
-                foreach (JToken tokenInd in array)
-                {
-
-                    string path = tokenInd.Path;
-
-                    JToken clonedToken = input.DeepClone();
-
-                    JToken foundToken = clonedToken.SelectToken("$." + path);
-                    JToken tokenToReplcae = clonedToken.SelectToken("$." + pathToReplace);
-
-                    tokenToReplcae.Replace(foundToken);
-
-                    if (jsonObjects == null)
-                        jsonObjects = new List<JObject>();
-
-                    jsonObjects.Add(clonedToken as JObject);
-
-
-                }
-            }
-            else
-                throw new Exception("ArrayPath must be a valid JSON path to a JSON array.");
-
-            return jsonObjects;
         }
         #endregion
 
