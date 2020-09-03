@@ -8,50 +8,12 @@ namespace JUST
 {
     public class Utilities
     {
-        public static IDictionary<string,string> FlattenJson(string inputJson)
-        {
-            JToken parent = JToken.Parse(inputJson);
-
-            Dictionary<string, string> result = null;
-
-            result = PopulateRecursively(parent,result);
-            
-            return result;
-        }
-
         public static JArray ParseOrGetEmpty(string arrayTokens)
         {
             if (string.IsNullOrWhiteSpace(arrayTokens))
                 arrayTokens = "[]";
 
             return JArray.Parse(arrayTokens);
-        }
-
-        private static Dictionary<string, string>  PopulateRecursively(JToken parent, Dictionary<string, string> result)
-        {
-            if (parent.HasValues)
-            {
-                foreach (JToken child in parent.Children())
-                {
-                    if (child is JProperty)
-                    {
-                        JProperty property = child as JProperty;
-
-                        if (result == null)
-                            result = new Dictionary<string, string>();
-
-                        if(property.Value.HasValues)
-                        {
-                            PopulateRecursively(property.Value, result);
-                        }                                              
-                        else
-                            result.Add(property.Path, property.Value.ToString());
-                    }
-                   
-                }
-            }
-
-            return result;
         }
 
         public static JArray GroupArray(JArray array, string groupingPropertyName, string groupedPropertyName)
