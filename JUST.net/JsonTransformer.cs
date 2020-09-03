@@ -12,10 +12,10 @@ namespace JUST
     {
         private const string DefaultTransformerNamespace = "JUST.Transformer";
 
-        public static string Transform(string transformerJson, string inputJson)
+        public string Transform(string transformerJson, string inputJson)
         {
-            JToken result = null;
             JToken transformerToken = JToken.Parse(transformerJson);
+            JToken result;
             switch (transformerToken.Type)
             {
                 case JTokenType.Object:
@@ -33,7 +33,7 @@ namespace JUST
             return output;
         }
 
-        public static JArray Transform(JArray transformerArray, string input)
+        public JArray Transform(JArray transformerArray, string input)
         {
             var result = new JArray();
             foreach (var transformer in transformerArray)
@@ -48,21 +48,22 @@ namespace JUST
             return result;
         }
 
-        public static JObject Transform(JObject transformer, JObject input)
+        public JObject Transform(JObject transformer, JObject input)
         {
             string inputJson = JsonConvert.SerializeObject(input);
             return Transform(transformer, inputJson);
         }
 
-        public static JObject Transform(JObject transformer, string input)
+        public JObject Transform(JObject transformer, string input)
         {
             RecursiveEvaluate(transformer, input, null, null);
             return transformer;
         }
+
         #region RecursiveEvaluate
 
 
-        private static void RecursiveEvaluate(JToken parentToken, string inputJson, JArray parentArray, JToken currentArrayToken)
+        private void RecursiveEvaluate(JToken parentToken, string inputJson, JArray parentArray, JToken currentArrayToken)
         {
             if (parentToken == null)
                 return;
@@ -255,10 +256,6 @@ namespace JUST
                             loopProperties.Add(property.Name);
                         }
 
-
-
-
-
                         isLoop = true;
                     }
 
@@ -283,13 +280,13 @@ namespace JUST
                             int sIndex = strArrayToken.IndexOf("#");
                             string sub1 = strArrayToken.Substring(0, sIndex);
 
-                            int indexOfENdFubction = GetIndexOfFunctionEnd(strArrayToken);
+                            int indexOfEndFunction = GetIndexOfFunctionEnd(strArrayToken);
 
-                            if (indexOfENdFubction > sIndex && sIndex > 0)
+                            if (indexOfEndFunction > sIndex && sIndex > 0)
                             {
-                                string sub2 = strArrayToken.Substring(indexOfENdFubction + 1, strArrayToken.Length - indexOfENdFubction - 1);
+                                string sub2 = strArrayToken.Substring(indexOfEndFunction + 1, strArrayToken.Length - indexOfEndFunction - 1);
 
-                                string functionResult = ParseFunction(strArrayToken.Substring(sIndex, indexOfENdFubction - sIndex + 1), inputJson, parentArray, currentArrayToken).ToString();
+                                string functionResult = ParseFunction(strArrayToken.Substring(sIndex, indexOfEndFunction - sIndex + 1), inputJson, parentArray, currentArrayToken).ToString();
 
                                 strArrayToken = sub1 + functionResult + sub2;
                             }
@@ -361,8 +358,6 @@ namespace JUST
                 if (childToken.Type == JTokenType.String && childToken.Value<string>().Trim().StartsWith("#")
                     && parentArray != null && currentArrayToken != null)
                 {
-
-
                     object newValue = ParseFunction(childToken.Value<string>(), inputJson, parentArray, currentArrayToken);
 
                     if (newValue != null && newValue.ToString().Contains("\""))
@@ -480,7 +475,7 @@ namespace JUST
         #endregion
 
         #region Copy
-        private static JToken Copy(string inputString, string inputJson)
+        private JToken Copy(string inputString, string inputJson)
         {
             int indexOfStart = inputString.IndexOf("(", 0);
             int indexOfEnd = inputString.LastIndexOf(")");
@@ -499,7 +494,7 @@ namespace JUST
         #endregion
 
         #region Delete
-        private static string Delete(string inputString)
+        private string Delete(string inputString)
         {
             int indexOfStart = inputString.IndexOf("(", 0);
             int indexOfEnd = inputString.LastIndexOf(")");
@@ -515,7 +510,7 @@ namespace JUST
         #endregion
 
         #region Replace
-        private static JToken Replace(string inputString, string inputJson)
+        private JToken Replace(string inputString, string inputJson)
         {
             int indexOfStart = inputString.IndexOf("(", 0);
             int indexOfEnd = inputString.LastIndexOf(")");
@@ -541,7 +536,7 @@ namespace JUST
 
         }
 
-        private static string GetTokenStringToReplace(string inputString)
+        private string GetTokenStringToReplace(string inputString)
         {
             int indexOfStart = inputString.IndexOf("(", 0);
             int indexOfEnd = inputString.LastIndexOf(")");
@@ -560,7 +555,7 @@ namespace JUST
 
         #region ParseFunction
 
-        private static object ParseFunction(string functionString, string inputJson, JArray array, JToken currentArrayElement)
+        private object ParseFunction(string functionString, string inputJson, JArray array, JToken currentArrayElement)
         {
             try
             {
@@ -654,10 +649,6 @@ namespace JUST
                     output = ReflectionHelper.InvokeFunction(null, "JUST.Transformer", functionName, new object[] { array, currentArrayElement, arguments[0] });
                 else if (functionName == "customfunction")
                     output = CallCustomFunction(parameters);
-                else if (Regex.IsMatch(functionName, ReflectionHelper.EXTERNAL_ASSEMBLY_REGEX))
-                {
-                    output = ReflectionHelper.CallExternalAssembly(functionName, parameters);
-                }
                 else if (functionName == "xconcat" || functionName == "xadd"
                     || functionName == "mathequals" || functionName == "mathgreaterthan" || functionName == "mathlessthan"
                     || functionName == "mathgreaterthanorequalto"
@@ -685,7 +676,7 @@ namespace JUST
             }
         }
 
-        private static object CallCustomFunction(object[] parameters)
+        private object CallCustomFunction(object[] parameters)
         {
             object[] customParameters = new object[parameters.Length - 3];
             string functionString = string.Empty;
@@ -717,7 +708,7 @@ namespace JUST
         #endregion
 
         #region GetArguments
-        private static string[] GetArguments(string rawArgument)
+        private string[] GetArguments(string rawArgument)
         {
             if (rawArgument.Trim() == "")
                 return new string[] { };
@@ -782,7 +773,7 @@ namespace JUST
         #endregion
 
         #region Split
-        public static IEnumerable<string> SplitJson(string input, string arrayPath)
+        public IEnumerable<string> SplitJson(string input, string arrayPath)
         {
             JObject inputJObject = JObject.Parse(input);
 
@@ -801,7 +792,7 @@ namespace JUST
             return output;
         }
 
-        public static IEnumerable<JObject> SplitJson(JObject input, string arrayPath)
+        public IEnumerable<JObject> SplitJson(JObject input, string arrayPath)
         {
             List<JObject> jsonObjects = null;
 
@@ -840,7 +831,7 @@ namespace JUST
         }
         #endregion
 
-        private static int GetIndexOfFunctionEnd(string totalString)
+        private int GetIndexOfFunctionEnd(string totalString)
         {
             int index = -1;
 

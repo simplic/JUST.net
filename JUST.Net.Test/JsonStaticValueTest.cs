@@ -12,7 +12,8 @@ namespace JUST.Net.Test
             var input = @"{ ""name"": ""max"" }";
             var transformer = @"{ ""firstName"": ""#valueof($.name)"" }";
 
-            var result = JsonTransformer.Transform(transformer, input);
+            var jsonTransformer = new JsonTransformer();
+            var result = jsonTransformer.Transform(transformer, input);
 
             var obj = JObject.Parse(result);
             Assert.Equal("max", obj.SelectToken("$.firstName").Value<string>());
@@ -24,7 +25,8 @@ namespace JUST.Net.Test
             var input = @"{ ""name"": ""max"" }";
             var transformer = @"{ ""firstName"": ""#valueof($.name)"", ""lastName"": ""max2"" }";
 
-            var result = JsonTransformer.Transform(transformer, input);
+            var jsonTransformer = new JsonTransformer();
+            var result = jsonTransformer.Transform(transformer, input);
 
             var obj = JObject.Parse(result);
             Assert.Equal("max", obj.SelectToken("$.firstName").Value<string>());
