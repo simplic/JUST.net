@@ -494,7 +494,7 @@ namespace JUST
 
                 return integerresult.ToString();
             }
-            catch(Exception ex)
+            catch
             {
                 return null;
             }
