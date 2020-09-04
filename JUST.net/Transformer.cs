@@ -89,12 +89,6 @@ namespace JUST
 
         #region string functions
 
-        public static string concat(string string1, string string2, string inputJson)
-        {
-            string string2Result = (string2 != null) ? string2 : string.Empty;
-            return string1 != null ? string1 + string2Result : string.Empty + string2Result;
-        }
-
         /// <summary>
         /// Compare to values
         /// </summary>
@@ -638,34 +632,6 @@ namespace JUST
 
         #endregion
 
-        #region Variable parameter functions
-        public static string xconcat(object[] list)
-        {
-            string result = string.Empty;
-
-            for (int i = 0; i < list.Length - 1; i++)
-            {
-                if (list[i] != null)
-                    result += list[i].ToString();
-            }
-
-            return result;
-        }
-
-        public static string xadd(object[] list)
-        {
-            int add = 0;
-
-            for (int i = 0; i < list.Length - 1; i++)
-            {
-                if (list[i] != null)
-                    add += Convert.ToInt32(list[i]);
-            }
-
-            return add.ToString();
-        }
-        #endregion
-
         public static object GetValue(JToken selectedToken)
         {
             object output = null;
@@ -732,119 +698,5 @@ namespace JUST
         }
 
         #endregion
-
-        #region operators
-        public static string stringequals(object[] list)
-        {
-            bool result = false;
-
-            if (list.Length >= 2)
-            {
-                if (list[0].ToString().Equals(list[1].ToString()))
-                    result = true;
-            }
-
-            return result.ToString();
-        }
-
-        public static string stringcontains(object[] list)
-        {
-            bool result = false;
-
-            if (list.Length >= 2)
-            {
-                if (list[0].ToString().Contains(list[1].ToString()))
-                    result = true;
-            }
-
-            return result.ToString();
-        }
-
-        public static string mathequals(object[] list)
-        {
-            bool result = false;
-
-
-            if (list.Length >= 2)
-            {
-                decimal lshDecimal = Convert.ToDecimal(list[0]);
-                decimal rhsDecimal = Convert.ToDecimal(list[1]);
-
-                if (lshDecimal == rhsDecimal)
-                    result = true;
-            }
-
-            return result.ToString();
-        }
-
-        public static string mathgreaterthan(object[] list)
-        {
-            bool result = false;
-
-
-            if (list.Length >= 2)
-            {
-                decimal lshDecimal = Convert.ToDecimal(list[0]);
-                decimal rhsDecimal = Convert.ToDecimal(list[1]);
-
-                if (lshDecimal > rhsDecimal)
-                    result = true;
-            }
-
-            return result.ToString();
-        }
-
-        public static string mathlessthan(object[] list)
-        {
-            bool result = false;
-
-
-            if (list.Length >= 2)
-            {
-                decimal lshDecimal = Convert.ToDecimal(list[0]);
-                decimal rhsDecimal = Convert.ToDecimal(list[1]);
-
-                if (lshDecimal < rhsDecimal)
-                    result = true;
-            }
-
-            return result.ToString();
-        }
-
-        public static string mathgreaterthanorequalto(object[] list)
-        {
-            bool result = false;
-
-
-            if (list.Length >= 2)
-            {
-                decimal lshDecimal = Convert.ToDecimal(list[0]);
-                decimal rhsDecimal = Convert.ToDecimal(list[1]);
-
-                if (lshDecimal >= rhsDecimal)
-                    result = true;
-            }
-
-            return result.ToString();
-        }
-
-        public static string mathlessthanorequalto(object[] list)
-        {
-            bool result = false;
-
-
-            if (list.Length >= 2)
-            {
-                decimal lshDecimal = Convert.ToDecimal(list[0]);
-                decimal rhsDecimal = Convert.ToDecimal(list[1]);
-
-                if (lshDecimal <= rhsDecimal)
-                    result = true;
-            }
-
-            return result.ToString();
-        }
-        #endregion
-
     }
 }

@@ -9,16 +9,46 @@ namespace JUST.Net.Test
     public class DynamicExpressoTest
     {
         [Fact]
-        public void StringConcat_Test()
+        public void StringConcat_Static_Test()
         {
             var input = @"{ ""firstName"": ""max"", ""lastName"": ""foo"" }";
-            var transformer = @"{ ""friendlyName"": ""~(valueOf(c, \""$.firstName\"") + valueOf(c, \""$.lastName\""))"" }";
+            //var transformer = @"{ ""friendlyName"": ""~(valueOf(c, \""$.firstName\"") + valueOf(c, \""$.lastName\""))"" }";
+            var transformer = @"{ ""friendlyName"": ""~(\""max\"" + \"" \"" + \""foo\"")"" }";
 
             var jsonTransformer = new JsonTransformer();
             var result = jsonTransformer.Transform(transformer, input);
 
             var obj = JObject.Parse(result);
-            // Assert.Equal("max foo", obj.SelectToken("$.friendlyName").Value<string>());
+            Assert.Equal("max foo", obj.SelectToken("$.friendlyName").Value<string>());
+            Assert.True(true);
+        }
+
+        [Fact]
+        public void String_ValueOf_Test()
+        {
+            var input = @"{ ""firstName"": ""max"" }";
+            //var transformer = @"{ ""friendlyName"": ""~(valueOf(c, \""$.firstName\"") + valueOf(c, \""$.lastName\""))"" }";
+            var transformer = @"{ ""friendlyName"": ""~(valueOf(\""$.firstName\""))"" }";
+
+            var jsonTransformer = new JsonTransformer();
+            var result = jsonTransformer.Transform(transformer, input);
+
+            var obj = JObject.Parse(result);
+            Assert.Equal("max", obj.SelectToken("$.friendlyName").Value<string>());
+            Assert.True(true);
+        }
+
+        [Fact]
+        public void String_ValueOf_Concat_Test()
+        {
+            var input = @"{ ""firstName"": ""max"", ""lastName"": ""foo"" }";
+            var transformer = @"{ ""friendlyName"": ""~(valueOfStr(\""$.firstName\"") + valueOfStr(\""$.lastName\""))"" }";
+
+            var jsonTransformer = new JsonTransformer();
+            var result = jsonTransformer.Transform(transformer, input);
+
+            var obj = JObject.Parse(result);
+            Assert.Equal("maxfoo", obj.SelectToken("$.friendlyName").Value<string>());
             Assert.True(true);
         }
     }

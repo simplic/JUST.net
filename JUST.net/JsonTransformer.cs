@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using JUST.net;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -182,27 +183,43 @@ namespace JUST
 
                     }
 
-                    if (property.Name != null && property.Value.ToString().Trim().StartsWith("#")
-                        && !property.Name.Contains("#eval") && !property.Name.Contains("#ifgroup")
-                        && !property.Name.Contains("#loop"))
+                    if (ExpressionParserUtilities.IsExpression(property.Value.ToString().Trim(), out string expression))
                     {
-                        object newValue = ParseFunction(property.Value.ToString(), inputJson, parentArray, currentArrayToken);
+                        // Create context
 
-                        if (newValue != null && newValue.ToString().Contains("\""))
-                        {
-                            try
-                            {
-                                JToken newToken = JToken.Parse(newValue.ToString());
-                                property.Value = newToken;
-                            }
-                            catch
-                            {
-                                property.Value = new JValue(newValue);
-                            }
-                        }
-                        else
-                            property.Value = new JValue(newValue);
+                        var interpreter = new DynamicExpresso.Interpreter();
+
+                        Func<string, string> valueOf = (path) => Transformer.valueof(path, inputJson).ToString();
+
+                        interpreter.SetFunction("valueOfStr", valueOf);
+
+                        var result = interpreter.Eval(expression);
+
+                        property.Value = new JValue(result);
                     }
+
+                    // TODO: Not required anymore
+                    // if (property.Name != null && property.Value.ToString().Trim().StartsWith("#")
+                    //     && !property.Name.Contains("#eval") && !property.Name.Contains("#ifgroup")
+                    //     && !property.Name.Contains("#loop"))
+                    // {
+                    //     object newValue = ParseFunction(property.Value.ToString(), inputJson, parentArray, currentArrayToken);
+                    // 
+                    //     if (newValue != null && newValue.ToString().Contains("\""))
+                    //     {
+                    //         try
+                    //         {
+                    //             JToken newToken = JToken.Parse(newValue.ToString());
+                    //             property.Value = newToken;
+                    //         }
+                    //         catch
+                    //         {
+                    //             property.Value = new JValue(newValue);
+                    //         }
+                    //     }
+                    //     else
+                    //         property.Value = new JValue(newValue);
+                    // }
 
                     /* For looping*/
                     isLoop = false;
@@ -225,9 +242,10 @@ namespace JUST
 
                         if (tokensToAdd == null)
                         {
-                            tokensToAdd = new List<JToken>();
-
-                            tokensToAdd.Add(clonedProperty);
+                            tokensToAdd = new List<JToken>
+                            {
+                                clonedProperty
+                            };
                         }
 
 
@@ -678,16 +696,6 @@ namespace JUST
                     output = ReflectionHelper.InvokeFunction(null, "JUST.Transformer", functionName, new object[] { array, currentArrayElement, arguments[0] });
                 else if (functionName == "customfunction")
                     output = CallCustomFunction(parameters);
-                else if (functionName == "xconcat" || functionName == "xadd"
-                    || functionName == "mathequals" || functionName == "mathgreaterthan" || functionName == "mathlessthan"
-                    || functionName == "mathgreaterthanorequalto"
-                    || functionName == "mathlessthanorequalto" || functionName == "stringcontains" ||
-                    functionName == "stringequals")
-                {
-                    object[] oParams = new object[1];
-                    oParams[0] = parameters;
-                    output = ReflectionHelper.InvokeFunction(null, DefaultTransformerNamespace, functionName, oParams);
-                }
                 else
                 {
                     if (currentArrayElement != null && functionName != "valueof")
