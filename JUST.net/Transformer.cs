@@ -8,13 +8,9 @@ namespace JUST
 {
     internal class Transformer
     {
-        public static object valueof(string jsonPath, string inputJson)
+        public static object valueof(string jsonPath, JToken input)
         {
-            JsonReader reader = new JsonTextReader(new StringReader(inputJson));
-            reader.DateParseHandling = DateParseHandling.None;
-            JToken token = JObject.Load(reader);
-
-            JToken selectedToken = token.SelectToken(jsonPath);
+            JToken selectedToken = input.SelectToken(jsonPath);
             return GetValue(selectedToken);
         }
 

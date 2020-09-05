@@ -11,8 +11,21 @@ namespace JUST
 {
     public class JsonTransformer
     {
+        #region Fields
         private const string DefaultTransformerNamespace = "JUST.Transformer";
-        private object inputObject;
+        private readonly ExpressionInterpreter expressionInterpreter;
+        private JToken inputObject;
+        #endregion
+
+        #region Constructor
+        /// <summary>
+        /// Initialize json transformer
+        /// </summary>
+        public JsonTransformer()
+        {
+            expressionInterpreter = new ExpressionInterpreter();
+        }
+        #endregion
 
         #region [Transform]
         /// <summary>
@@ -83,7 +96,11 @@ namespace JUST
         /// <returns>Transformed JObject</returns>
         public JObject Transform(JObject transformer, string input)
         {
-            inputObject = JsonConvert.DeserializeObject(input);
+            JsonReader reader = new JsonTextReader(new StringReader(input));
+            reader.DateParseHandling = DateParseHandling.None;
+            inputObject = JObject.Load(reader);
+
+            expressionInterpreter.Setup(inputObject);
 
             RecursiveEvaluate(transformer, input, null, null);
             return transformer;
@@ -179,8 +196,6 @@ namespace JUST
 
 
                                 tokensToDelete.Add(Delete(arrayValue.Value<string>()));
-
-
                             }
                         }
 
@@ -189,15 +204,9 @@ namespace JUST
                     if (ExpressionParserUtilities.IsExpression(property.Value.ToString().Trim(), out string expression))
                     {
                         // Create context
+                        expressionInterpreter.SetContext(currentArrayToken);
 
-                        var interpreter = new DynamicExpresso.Interpreter();
-                        interpreter.SetVariable("input", inputObject);
-
-                        Func<string, string> valueOf = (path) => Transformer.valueof(path, inputJson).ToString();
-
-                        interpreter.SetFunction("valueOfStr", valueOf);
-
-                        var result = interpreter.Eval(expression);
+                        var result = expressionInterpreter.Eval(expression);
 
                         property.Value = new JValue(result);
                     }
@@ -251,9 +260,6 @@ namespace JUST
                                 clonedProperty
                             };
                         }
-
-
-
                     }
 
                     if (property.Name != null && property.Name.Contains("#ifgroup"))
@@ -685,7 +691,7 @@ namespace JUST
 
                         newArray.Add(arrayItem);
                     }
-                    
+
                     output = newArray;
                 }
                 else if (functionName == "currentvalue" || functionName == "currentindex" || functionName == "lastindex"

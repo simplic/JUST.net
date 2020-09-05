@@ -51,5 +51,19 @@ namespace JUST.Net.Test
             Assert.Equal("maxfoo", obj.SelectToken("$.friendlyName").Value<string>());
             Assert.True(true);
         }
+
+        [Fact]
+        public void String_ValueOf_Add_Test()
+        {
+            var input = @"{ ""val1"": 1, ""val2"": ""3"" }";
+            var transformer = @"{ ""val"": ""~(valueOfInt(\""$.val1\"") + valueOfInt(\""$.val2\""))"" }";
+
+            var jsonTransformer = new JsonTransformer();
+            var result = jsonTransformer.Transform(transformer, input);
+
+            var obj = JObject.Parse(result);
+            Assert.Equal("4", obj.SelectToken("$.val").Value<string>());
+            Assert.True(true);
+        }
     }
 }
