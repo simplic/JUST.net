@@ -13,7 +13,7 @@ namespace JUST.Net.Test
         {
             var input = @"{ ""array"": [ { ""name"": ""hans"" }, { ""name"": ""simplic"" } ] }";
 
-            var transformer = @"{ ""ar"": { ""#loop($.array)"": { ""n"": ""~(valueOfIterStr(\""$.name\""))"", ""index"": ""~(currentIndex)"" } } }";
+            var transformer = @"{ ""ar"": { ""#loop($.array)"": { ""n"": ""~(valueOfIterStr(\""$.name\""))"", ""index"": ""~(currentIndex)"", ""last"": ""~(lastIndex)"" } } }";
 
             var jsonTransformer = new JsonTransformer();
             var result = jsonTransformer.Transform(transformer, input);
@@ -24,6 +24,9 @@ namespace JUST.Net.Test
 
             Assert.Equal(0, obj.SelectToken("$.ar[0].index").Value<int>());
             Assert.Equal(1, obj.SelectToken("$.ar[1].index").Value<int>());
+
+            Assert.Equal(1, obj.SelectToken("$.ar[0].last").Value<int>());
+            Assert.Equal(1, obj.SelectToken("$.ar[1].last").Value<int>());
             Assert.True(true);
         }
     }

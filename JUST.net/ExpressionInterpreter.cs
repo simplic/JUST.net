@@ -79,22 +79,17 @@ namespace JUST.net
             var identifiers = DetectIdentifiers(expression);
             if (identifiers != null)
             {
-                foreach (var identifier in identifiers.UnknownIdentifiers)
+
+                foreach (var identifier in identifiers.UnknownIdentifiers.Concat(identifiers.Identifiers.Select(x => x.Name)))
                 {
                     switch (identifier)
                     {
                         case "currentIndex":
                             SetVariable("currentIndex", array.IndexOf(arrayElement));
                             break;
-                    }
-                }
 
-                foreach (var identifier in identifiers.Identifiers.Select(x => x.Name))
-                {
-                    switch (identifier)
-                    {
-                        case "currentIndex":
-                            SetVariable("currentIndex", array.IndexOf(arrayElement));
+                        case "lastIndex":
+                            SetVariable("lastIndex", array.IndexOf(array.Last));
                             break;
                     }
                 }

@@ -91,62 +91,6 @@ namespace JUST
 
         #region string functions
 
-        /// <summary>
-        /// Compare to values
-        /// </summary>
-        /// <param name="this">Basic value</param>
-        /// <param name="other">Value to compare with</param>
-        /// <param name="inputJson">Json object</param>
-        /// <returns>True if the objects are equal</returns>
-        public static bool equals(string @this, string other, string inputJson)
-        {
-            return @this == other;
-        }
-
-        public static string substring(string stringRef, string startIndex, string length, string inputJson)
-        {
-            try
-            {
-                return stringRef.Substring(Convert.ToInt32(startIndex), Convert.ToInt32(length));
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        public static string trimstart(string value, string trimChar, string inputJson)
-        {
-            if (string.IsNullOrEmpty(trimChar))
-                return value;
-
-            return value?.TrimStart(trimChar[0]);
-        }
-
-        public static string trimend(string value, string trimChar, string inputJson)
-        {
-            if (string.IsNullOrEmpty(trimChar))
-                return value;
-
-            return value?.TrimEnd(trimChar[0]);
-        }
-
-        public static string trim(string value, string inputJson)
-        {
-            return value?.Trim();
-        }
-
-        public static string replacestring(string value, string searchString, string replaceString, string inputJson)
-        {
-            if (searchString == null)
-                return value;
-
-            if (replaceString == null)
-                return value;
-
-            return value?.Replace(searchString, replaceString);
-        }
-
         public static string firstindexof(string stringRef, string searchString, string inputJson)
         {
             return stringRef.IndexOf(searchString, 0).ToString();
@@ -580,26 +524,7 @@ namespace JUST
 
         #endregion
 
-        // #region arraylooping
-        // public static object currentvalue(JArray array, JToken currentElement)
-        // {
-        // 
-        //     return GetValue(currentElement);
-        // }
-        // 
-        // 
-        // 
-        // public static object lastvalue(JArray array, JToken currentElement)
-        // {
-        // 
-        //     return GetValue(array.Last);
-        // }
-        // 
-        // public static string lastindex(JArray array, JToken currentElement)
-        // {
-        //     return (array.Count - 1).ToString();
-        // }
-        // 
+        // #region arraylooping 
         // public static object lastvalueatpath(JArray array, JToken currentElement, string jsonPath)
         // {
         // 
@@ -608,20 +533,6 @@ namespace JUST
         //     return GetValue(selectedToken);
         // }
         // #endregion
-
-        #region Constants
-
-        public static string constant_comma(string inputJson)
-        {
-            return ",";
-        }
-
-        public static string constant_hash(string inputJson)
-        {
-            return "#";
-        }
-
-        #endregion
 
         public static object GetValue(JToken selectedToken, object defaultValue)
         {
