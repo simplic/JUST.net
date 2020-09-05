@@ -50,7 +50,7 @@ namespace JUST
                     throw new NotSupportedException($"Transformer of type '{transformerToken.Type}' not supported!");
             }
 
-            string output = JsonConvert.SerializeObject(result);
+            string output = JsonConvert.SerializeObject(result, Formatting.Indented);
 
             return output;
         }
