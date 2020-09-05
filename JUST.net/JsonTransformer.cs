@@ -100,7 +100,7 @@ namespace JUST
             reader.DateParseHandling = DateParseHandling.None;
             inputObject = JObject.Load(reader);
 
-            expressionInterpreter.Setup(inputObject);
+            expressionInterpreter.Setup(inputObject, StrictPathHandling);
 
             RecursiveEvaluate(transformer, input, null, null);
             return transformer;
@@ -201,16 +201,20 @@ namespace JUST
 
                     if (ExpressionParserUtilities.IsExpression(property.Value.ToString().Trim(), out string expression))
                     {
-                        expressionInterpreter.SetContext(currentArrayToken);
+                        expressionInterpreter.SetContext(currentArrayToken, parentArray, expression);
 
                         try
                         {
                             var result = expressionInterpreter.Eval(expression);
                             property.Value = new JValue(result);
                         }
+                        catch (PathNotFoundException ex)
+                        {
+                            throw;
+                        }
                         catch (Exception ex)
                         {
-                            throw new Exception($"Could not execute expression: {expression}", ex);
+                            throw new Exception($"Could not execute expression: {expression}. Property: {property}.", ex);
                         }
                     }
 
@@ -841,5 +845,11 @@ namespace JUST
 
             return index;
         }
+
+        /// <summary>
+        /// Gets or sets whether to use strict path handling. If set to true, an exception will be caused
+        /// if a path is not existing.
+        /// </summary>
+        public bool StrictPathHandling { get; set; } = false;
     }
 }

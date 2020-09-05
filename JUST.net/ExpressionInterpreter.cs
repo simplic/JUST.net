@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace JUST.net
@@ -11,6 +12,8 @@ namespace JUST.net
     /// </summary>
     internal class ExpressionInterpreter : Interpreter
     {
+        private bool strictPathHandling;
+
         /// <summary>
         /// Initialize interpreter
         /// </summary>
@@ -25,18 +28,20 @@ namespace JUST.net
         /// <summary>
         /// Initialize core methods
         /// </summary>
-        public void Setup(JToken inputObject)
+        public void Setup(JToken inputObject, bool strictPathHandling)
         {
-            Func<string, string> valueOfStr = (path) => Transformer.valueof(path, inputObject).ToString();
-            Func<string, object> valueOf = (path) => Transformer.valueof(path, inputObject);
+            this.strictPathHandling = strictPathHandling;
+
+            Func<string, string> valueOfStr = (path) => Transformer.ValueOf(path, inputObject, strictPathHandling, "").ToString();
+            Func<string, object> valueOf = (path) => Transformer.ValueOf(path, inputObject, strictPathHandling, new object());
             Func<string, int> valueOfInt = (path) =>
             {
-                int.TryParse(Transformer.valueof(path, inputObject)?.ToString(), out int r);
+                int.TryParse(Transformer.ValueOf(path, inputObject, strictPathHandling, 0)?.ToString(), out int r);
                 return r;
             };
             Func<string, double> valueOfDouble = (path) =>
             {
-                double.TryParse(Transformer.valueof(path, inputObject)?.ToString(), out double r);
+                double.TryParse(Transformer.ValueOf(path, inputObject, strictPathHandling, 0)?.ToString(), out double r);
                 return r;
             };
             Func<string, string> nullToString = (value) => value ?? "";
@@ -51,18 +56,18 @@ namespace JUST.net
         /// <summary>
         /// Initialize core methods
         /// </summary>
-        public void SetContext(JToken arrayElement)
+        public void SetContext(JToken arrayElement, JArray array, string expression)
         {
-            Func<string, string> valueOfStr = (path) => Transformer.valueof(path, arrayElement).ToString();
-            Func<string, object> valueOf = (path) => Transformer.valueof(path, arrayElement);
+            Func<string, string> valueOfStr = (path) => Transformer.ValueOf(path, arrayElement, strictPathHandling, "").ToString();
+            Func<string, object> valueOf = (path) => Transformer.ValueOf(path, arrayElement, strictPathHandling, new object());
             Func<string, int> valueOfInt = (path) =>
             {
-                int.TryParse(Transformer.valueof(path, arrayElement)?.ToString(), out int r);
+                int.TryParse(Transformer.ValueOf(path, arrayElement, strictPathHandling, 0)?.ToString(), out int r);
                 return r;
             };
             Func<string, double> valueOfDouble = (path) =>
             {
-                double.TryParse(Transformer.valueof(path, arrayElement)?.ToString(), out double r);
+                double.TryParse(Transformer.ValueOf(path, arrayElement, strictPathHandling, 0)?.ToString(), out double r);
                 return r;
             };
 
@@ -70,6 +75,30 @@ namespace JUST.net
             SetFunction("valueOfIterStr", valueOfStr);
             SetFunction("valueOfIterInt", valueOfInt);
             SetFunction("valueOfIterDouble", valueOfDouble);
+
+            var identifiers = DetectIdentifiers(expression);
+            if (identifiers != null)
+            {
+                foreach (var identifier in identifiers.UnknownIdentifiers)
+                {
+                    switch (identifier)
+                    {
+                        case "currentIndex":
+                            SetVariable("currentIndex", array.IndexOf(arrayElement));
+                            break;
+                    }
+                }
+
+                foreach (var identifier in identifiers.Identifiers.Select(x => x.Name))
+                {
+                    switch (identifier)
+                    {
+                        case "currentIndex":
+                            SetVariable("currentIndex", array.IndexOf(arrayElement));
+                            break;
+                    }
+                }
+            }
         }
     }
 }

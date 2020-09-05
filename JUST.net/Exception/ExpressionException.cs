@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace JUST.net
+namespace JUST
 {
     public class ExpressionException : Exception
     {

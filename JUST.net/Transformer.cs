@@ -8,10 +8,19 @@ namespace JUST
 {
     internal class Transformer
     {
-        public static object valueof(string jsonPath, JToken input)
+        public static object ValueOf(string jsonPath, JToken input, bool strictPathHandling, object defaultValue)
         {
             JToken selectedToken = input.SelectToken(jsonPath);
-            return GetValue(selectedToken);
+
+            if (strictPathHandling)
+            {
+                if (selectedToken == null)
+                {
+                    throw new PathNotFoundException($"Could not find object at path: {jsonPath},");
+                }
+            }
+
+            return GetValue(selectedToken, defaultValue);
         }
 
         public static string getcurrentscopeasstring(string inputJson)
@@ -571,45 +580,34 @@ namespace JUST
 
         #endregion
 
-        #region arraylooping
-        public static object currentvalue(JArray array, JToken currentElement)
-        {
-
-            return GetValue(currentElement);
-        }
-
-        public static string currentindex(JArray array, JToken currentElement)
-        {
-            return array.IndexOf(currentElement).ToString();
-        }
-
-
-        public static object lastvalue(JArray array, JToken currentElement)
-        {
-
-            return GetValue(array.Last);
-        }
-
-        public static string lastindex(JArray array, JToken currentElement)
-        {
-            return (array.Count - 1).ToString();
-        }
-
-        public static object currentvalueatpath(JArray array, JToken currentElement, string jsonPath)
-        {
-            JToken selectedToken = currentElement.SelectToken(jsonPath);
-
-            return GetValue(selectedToken);
-        }
-
-        public static object lastvalueatpath(JArray array, JToken currentElement, string jsonPath)
-        {
-
-            JToken selectedToken = array.Last.SelectToken(jsonPath);
-
-            return GetValue(selectedToken);
-        }
-        #endregion
+        // #region arraylooping
+        // public static object currentvalue(JArray array, JToken currentElement)
+        // {
+        // 
+        //     return GetValue(currentElement);
+        // }
+        // 
+        // 
+        // 
+        // public static object lastvalue(JArray array, JToken currentElement)
+        // {
+        // 
+        //     return GetValue(array.Last);
+        // }
+        // 
+        // public static string lastindex(JArray array, JToken currentElement)
+        // {
+        //     return (array.Count - 1).ToString();
+        // }
+        // 
+        // public static object lastvalueatpath(JArray array, JToken currentElement, string jsonPath)
+        // {
+        // 
+        //     JToken selectedToken = array.Last.SelectToken(jsonPath);
+        // 
+        //     return GetValue(selectedToken);
+        // }
+        // #endregion
 
         #region Constants
 
@@ -625,9 +623,9 @@ namespace JUST
 
         #endregion
 
-        public static object GetValue(JToken selectedToken)
+        public static object GetValue(JToken selectedToken, object defaultValue)
         {
-            object output = null;
+            object output = defaultValue;
             if (selectedToken != null)
             {
                 if (selectedToken.Type == JTokenType.Date)
