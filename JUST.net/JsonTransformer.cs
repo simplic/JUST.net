@@ -12,6 +12,7 @@ namespace JUST
     public class JsonTransformer
     {
         private const string DefaultTransformerNamespace = "JUST.Transformer";
+        private object inputObject;
 
         #region [Transform]
         /// <summary>
@@ -82,6 +83,8 @@ namespace JUST
         /// <returns>Transformed JObject</returns>
         public JObject Transform(JObject transformer, string input)
         {
+            inputObject = JsonConvert.DeserializeObject(input);
+
             RecursiveEvaluate(transformer, input, null, null);
             return transformer;
         }
@@ -188,6 +191,7 @@ namespace JUST
                         // Create context
 
                         var interpreter = new DynamicExpresso.Interpreter();
+                        interpreter.SetVariable("input", inputObject);
 
                         Func<string, string> valueOf = (path) => Transformer.valueof(path, inputJson).ToString();
 
@@ -596,11 +600,6 @@ namespace JUST
         #endregion
 
         #region ParseFunction
-
-        private object ExecuteExpression(string expression, string inputJson)
-        {
-            return null;  
-        }
 
         private object ParseFunction(string functionString, string inputJson, JArray array, JToken currentArrayElement)
         {

@@ -30,8 +30,10 @@ namespace JUST
 
         public static object getarray(string document, string jsonPath, string inputJson)
         {
-            JsonReader reader = new JsonTextReader(new StringReader(document));
-            reader.DateParseHandling = DateParseHandling.None;
+            JsonReader reader = new JsonTextReader(new StringReader(document))
+            {
+                DateParseHandling = DateParseHandling.None
+            };
             JToken token = JObject.Load(reader);
 
             var jsonArrayToken = token.SelectTokens(jsonPath).ToList();
