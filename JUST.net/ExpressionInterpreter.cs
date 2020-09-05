@@ -38,11 +38,13 @@ namespace JUST.net
                 double.TryParse(Transformer.valueof(path, inputObject)?.ToString(), out double r);
                 return r;
             };
+            Func<string, string> nullToString = (value) => value ?? "";
 
             SetFunction("valueOf", valueOf);
             SetFunction("valueOfStr", valueOfStr);
             SetFunction("valueOfInt", valueOfInt);
             SetFunction("valueOfDouble", valueOfDouble);
+            SetFunction("nullToString", nullToString);
         }
 
         /// <summary>
