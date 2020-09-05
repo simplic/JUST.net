@@ -19,11 +19,6 @@ namespace JUST
             return inputJson;
         }
 
-        public static string tostring(object input, string inputJson)
-        {
-            return input?.ToString();
-        }
-
         public static object getarray(string document, string jsonPath, string inputJson)
         {
             JsonReader reader = new JsonTextReader(new StringReader(document))
@@ -635,11 +630,9 @@ namespace JUST
             object output = null;
             if (selectedToken != null)
             {
-
                 if (selectedToken.Type == JTokenType.Date)
                 {
                     DateTime value = Convert.ToDateTime(selectedToken.Value<DateTime>());
-
 
                     output = value.ToString("yyyy-MM-ddTHH:mm:sszzzz");
                 }

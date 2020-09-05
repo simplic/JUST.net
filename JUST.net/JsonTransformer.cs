@@ -194,21 +194,24 @@ namespace JUST
                                 if (tokensToDelete == null)
                                     tokensToDelete = new List<JToken>();
 
-
                                 tokensToDelete.Add(Delete(arrayValue.Value<string>()));
                             }
                         }
-
                     }
 
                     if (ExpressionParserUtilities.IsExpression(property.Value.ToString().Trim(), out string expression))
                     {
-                        // Create context
                         expressionInterpreter.SetContext(currentArrayToken);
 
-                        var result = expressionInterpreter.Eval(expression);
-
-                        property.Value = new JValue(result);
+                        try
+                        {
+                            var result = expressionInterpreter.Eval(expression);
+                            property.Value = new JValue(result);
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception($"Could not execute expression: {expression}", ex);
+                        }
                     }
 
                     // TODO: Not required anymore
