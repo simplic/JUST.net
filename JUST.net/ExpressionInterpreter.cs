@@ -19,6 +19,7 @@ namespace JUST.net
             // Add references
             Reference(typeof(DateTime));
             Reference(typeof(String));
+            Reference(typeof(Convert));
         }
 
         /// <summary>
