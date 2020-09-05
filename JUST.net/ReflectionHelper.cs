@@ -10,8 +10,6 @@ namespace JUST
 {
     internal class ReflectionHelper
     {
-        internal const string EXTERNAL_ASSEMBLY_REGEX = "([\\w.]+)[:]{2}([\\w.]+)[:]{0,2}([\\w.]*)";
-
         internal static object InvokeFunction(Assembly assembly, String myclass, String mymethod, object[] parameters, bool convertParameters = false)
         {
             Type type = assembly?.GetType(myclass) ?? Type.GetType(myclass);
@@ -29,23 +27,6 @@ namespace JUST
                 }
             }
             return methodInfo.Invoke(instance, convertParameters ? typedParameters.ToArray() : parameters);
-        }
-
-        internal static object CallExternalAssembly(string functionName, object[] parameters)
-        {
-            var match = Regex.Match(functionName, EXTERNAL_ASSEMBLY_REGEX);
-            var isAssemblyDefined = match.Groups.Count == 4 && match.Groups[3].Value != string.Empty;
-            var assemblyName = isAssemblyDefined ? match.Groups[1].Value : null;
-            var namespc = match.Groups[isAssemblyDefined ? 2 : 1].Value;
-            var methodName = match.Groups[isAssemblyDefined ? 3 : 2].Value;
-
-            var assembly = GetAssembly(isAssemblyDefined, assemblyName, namespc, methodName);
-            if (assembly != null)
-            {
-                return InvokeFunction(assembly, namespc, methodName, FilterParameters(parameters), true);
-            }
-
-            throw new MissingMethodException((assemblyName != null ? $"{assemblyName}." : string.Empty) + $"{namespc}.{methodName}");
         }
 
         private static Assembly GetAssembly(bool isAssemblyDefined, string assemblyName, string namespc, string methodName)
