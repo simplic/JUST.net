@@ -1,3 +1,0 @@
-﻿{
-  "#": [ "#copy($)", "#delete($.menu.popup)", "#delete($.x)" ]
-}

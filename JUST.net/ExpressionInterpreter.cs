@@ -91,6 +91,14 @@ namespace JUST.net
                         case "lastIndex":
                             SetVariable("lastIndex", array.IndexOf(array.Last));
                             break;
+
+                        case "arrayElementStr":
+                            {
+                                if (arrayElement == null)
+                                    SetVariable("currentElementStr", arrayElement.ToString());
+                                SetVariable("currentElementStr", arrayElement.ToString());
+                            }
+                            break;
                     }
                 }
             }

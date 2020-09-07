@@ -1,4 +1,0 @@
-﻿{
-  "ifconditiontesttrue": "#ifcondition(#valueof($.menu.id.file),csv,#valueof($.menu.value.Window),fail)",
-  "ifconditiontestfalse": "#ifcondition(#valueof($.menu.id.file),xml,#valueof($.menu.value.Window),fail)"
-}

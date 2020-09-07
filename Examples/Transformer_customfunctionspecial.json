@@ -1,3 +1,0 @@
-﻿{
-  "Season": "#customfunction(JUST.NET.Test,JUST.NET.Test.Season.serialize,#valueof($))"
-}

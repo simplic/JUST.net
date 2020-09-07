@@ -6,7 +6,7 @@ using System.IO;
 
 namespace JUST
 {
-    internal class Transformer
+    internal static class Transformer
     {
         public static object ValueOf(string jsonPath, JToken input, bool strictPathHandling, object defaultValue)
         {
@@ -21,11 +21,6 @@ namespace JUST
             }
 
             return GetValue(selectedToken, defaultValue);
-        }
-
-        public static string getcurrentscopeasstring(string inputJson)
-        {
-            return inputJson;
         }
 
         public static object getarray(string document, string jsonPath, string inputJson)
@@ -101,25 +96,6 @@ namespace JUST
             return stringRef.LastIndexOf(searchString).ToString();
         }
 
-        public static string concatall(string array, string inputJson)
-        {
-            string result = null;
-
-            JArray parsedArray = Utilities.ParseOrGetEmpty(array);
-
-            if (parsedArray != null)
-            {
-                foreach (JToken token in parsedArray.Children())
-                {
-                    if (result == null)
-                        result = string.Empty;
-                    result += token.ToString();
-                }
-            }
-
-            return result;
-        }
-
         public static string listall(string array, string separator, string inputJson)
         {
             string result = null;
@@ -143,32 +119,6 @@ namespace JUST
                     isFirstItem = false;
 
                     result += token.ToString();
-                }
-            }
-
-            return result;
-        }
-
-        public static string concatallatpath(string array, string jsonPath, string inputJson)
-        {
-            string result = null;
-
-            JArray parsedArray = Utilities.ParseOrGetEmpty(array);
-
-            if (parsedArray != null)
-            {
-
-                foreach (JToken token in parsedArray.Children())
-                {
-                    JToken selectedToken = token.SelectToken(jsonPath);
-
-                    if (selectedToken == null)
-                        continue;
-
-                    if (result == null)
-                        result = string.Empty;
-
-                    result += selectedToken.ToString();
                 }
             }
 
@@ -206,34 +156,6 @@ namespace JUST
             }
 
             return result;
-        }
-        #endregion
-
-        #region math functions
-
-
-        public static string add(string num1, string num2, string inputJson)
-        {
-            try
-            {
-                return (Convert.ToInt32(num1) + Convert.ToInt32(num2)).ToString();
-            }
-            catch { return null; }
-        }
-        public static string subtract(string num1, string num2, string inputJson)
-        {
-            try { return (Convert.ToInt32(num1) - Convert.ToInt32(num2)).ToString(); }
-            catch { return null; }
-        }
-        public static string multiply(string num1, string num2, string inputJson)
-        {
-            try { return (Convert.ToInt32(num1) * Convert.ToInt32(num2)).ToString(); }
-            catch { return null; }
-        }
-        public static string divide(string num1, string num2, string inputJson)
-        {
-            try { return (Convert.ToInt32(num1) / Convert.ToInt32(num2)).ToString(); }
-            catch { return null; }
         }
         #endregion
 
@@ -523,16 +445,6 @@ namespace JUST
         }
 
         #endregion
-
-        // #region arraylooping 
-        // public static object lastvalueatpath(JArray array, JToken currentElement, string jsonPath)
-        // {
-        // 
-        //     JToken selectedToken = array.Last.SelectToken(jsonPath);
-        // 
-        //     return GetValue(selectedToken);
-        // }
-        // #endregion
 
         public static object GetValue(JToken selectedToken, object defaultValue)
         {
