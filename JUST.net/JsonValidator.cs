@@ -116,9 +116,7 @@ namespace JUST
 
         private static void HandleEvent(object sender, SchemaValidationEventArgs args)
         {
-            throw new Exception( args.Message);
-           
+            throw new Exception( args.Message);           
         }
-
     }
 }
