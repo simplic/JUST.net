@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace JUST.net
 {
@@ -23,6 +24,7 @@ namespace JUST.net
             Reference(typeof(DateTime));
             Reference(typeof(String));
             Reference(typeof(Convert));
+            Reference(typeof(Regex));
         }
 
         /// <summary>
@@ -46,11 +48,21 @@ namespace JUST.net
             };
             Func<string, string> nullToString = (value) => value ?? "";
 
+            Func<string, string, string, string> regex= (value, pattern, defaultValue) =>
+            {
+                var result = Regex.Match(value, pattern);
+                if (result.Success)
+                    return result.Value;
+
+                return defaultValue;
+            };
+
             SetFunction("valueOf", valueOf);
             SetFunction("valueOfStr", valueOfStr);
             SetFunction("valueOfInt", valueOfInt);
             SetFunction("valueOfDouble", valueOfDouble);
             SetFunction("nullToString", nullToString);
+            SetFunction("regex", regex);
         }
 
         /// <summary>

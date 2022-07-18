@@ -205,6 +205,8 @@ namespace JUST
 
                         try
                         {
+                            expression = expression.Replace("@@\\", @"\\");
+
                             var result = expressionInterpreter.Eval(expression);
                             property.Value = new JValue(result);
                         }
