@@ -14,9 +14,9 @@ This will repace the JUST and JUST.NETCore packages.</Description>
     <PackageReleaseNotes>Fixed the following issues:-
 https://github.com/WorkMaze/JUST.net/issues/26
 https://github.com/WorkMaze/JUST.net/issues/25</PackageReleaseNotes>
-    <AssemblyVersion>5.6.22.718</AssemblyVersion>
-    <FileVersion>5.6.22.718</FileVersion>
-    <Version>5.6.22</Version>
+    <AssemblyVersion>6.0.24.905</AssemblyVersion>
+    <FileVersion>6.0.24.905</FileVersion>
+    <Version>6.0.24</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

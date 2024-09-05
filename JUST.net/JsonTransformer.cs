@@ -277,20 +277,45 @@ namespace JUST
                         int endIndex = property.Name.LastIndexOf(")");
 
                         string functionString = property.Name.Substring(startIndex + 1, endIndex - startIndex - 1);
-
-                        object functionResult = ParseFunction(functionString, inputJson, null, null);
                         bool result = false;
 
-                        try
+                        if (ExpressionParserUtilities.IsExpression(functionString, out string exp))
                         {
-                            result = Convert.ToBoolean(functionResult);
+                            try
+                            {
+                                exp = exp.Replace("@@\\", @"\\");
+
+                                try
+                                {
+                                    result = (bool)expressionInterpreter.Eval(exp);
+                                }
+                                catch (Exception ex)
+                                {
+                                    throw new Exception("#ifgroup expression can only handle boolean data types. E.g. ~(1 == 1)", ex);
+                                }
+                            }
+                            catch (PathNotFoundException ex)
+                            {
+                                throw;
+                            }
+                            catch (Exception ex)
+                            {
+                                throw new Exception($"Could not execute expression: {expression}. Property: {property}.", ex);
+                            }
                         }
-                        catch
+                        else
                         {
-                            result = false;
+                            object functionResult = ParseFunction(functionString, inputJson, null, null);
+
+                            try
+                            {
+                                result = Convert.ToBoolean(functionResult);
+                            }
+                            catch
+                            {
+                                result = false;
+                            }
                         }
-
-
 
                         if (result == true)
                         {
