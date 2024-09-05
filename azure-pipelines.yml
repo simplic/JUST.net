@@ -21,46 +21,46 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- checkout: self 
+  - checkout: self 
     persistCredentials: true
     fetchDepth: 1000
-    
-- task: NuGetToolInstaller@1
-  inputs:
-    versionSpec: '5.x'
-    
-- task: NuGetCommand@2
-  inputs:
-    command: 'restore'
-    restoreSolution: 'JUST.NET.sln'
-    feedsToUse: 'select'
-    vstsFeed: 'f7087ef5-bf6f-48b2-8b8b-5e513f4a7a9e'
-
-- task: MSBuild@1
-  inputs:
-    solution: 'JUST.NET.sln'
-    configuration: '$(buildConfiguration)'
-
-- task: DotNetCoreCLI@2
-  displayName: 'Run unit tests - $(buildConfiguration)'
-  inputs:
-    command: 'test'
-    arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/'
-    publishTestResults: true
-    projects: '**/*.Test.csproj'
-
-- task: NuGetCommand@2
-  inputs:
-    command: 'pack'
-    packagesToPack: '**/JUST.net.csproj;!**/JUST.NET.csproj'
-    configuration: '$(buildConfiguration)'
-    versioningScheme: 'off'
-
-- task: NuGetCommand@2
-  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
-  inputs:
-    command: 'push'
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/JUST.net.*.nupkg;!$(Build.ArtifactStagingDirectory)/JUST.net.*.symbols.nupkg'
-    nuGetFeedType: 'internal'
-    publishVstsFeed: 'f7087ef5-bf6f-48b2-8b8b-5e513f4a7a9e'
-    allowPackageConflicts: true
+      
+  - task: NuGetToolInstaller@1
+    inputs:
+      versionSpec: '5.x'
+      
+  - task: NuGetCommand@2
+    inputs:
+      command: 'restore'
+      restoreSolution: 'JUST.NET.sln'
+      feedsToUse: 'select'
+      vstsFeed: 'f7087ef5-bf6f-48b2-8b8b-5e513f4a7a9e'
+  
+  - task: MSBuild@1
+    inputs:
+      solution: 'JUST.NET.sln'
+      configuration: '$(buildConfiguration)'
+  
+  - task: DotNetCoreCLI@2
+    displayName: 'Run unit tests - $(buildConfiguration)'
+    inputs:
+      command: 'test'
+      arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/'
+      publishTestResults: true
+      projects: '**/*.Test.csproj'
+  
+  - task: NuGetCommand@2
+    inputs:
+      command: 'pack'
+      packagesToPack: '**/JUST.net.csproj;!**/JUST.NET.csproj'
+      configuration: '$(buildConfiguration)'
+      versioningScheme: 'off'
+  
+  - task: NuGetCommand@2
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+    inputs:
+      command: 'push'
+      packagesToPush: '$(Build.ArtifactStagingDirectory)/JUST.net.*.nupkg;!$(Build.ArtifactStagingDirectory)/JUST.net.*.symbols.nupkg'
+      nuGetFeedType: 'internal'
+      publishVstsFeed: 'f7087ef5-bf6f-48b2-8b8b-5e513f4a7a9e'
+      allowPackageConflicts: true
