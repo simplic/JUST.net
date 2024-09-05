@@ -283,11 +283,11 @@ namespace JUST
                         {
                             try
                             {
-                                expression = expression.Replace("@@\\", @"\\");
+                                exp = exp.Replace("@@\\", @"\\");
 
                                 try
                                 {
-                                    result = (bool)expressionInterpreter.Eval(expression);
+                                    result = (bool)expressionInterpreter.Eval(exp);
                                 }
                                 catch (Exception ex)
                                 {
