@@ -208,7 +208,19 @@ namespace JUST
                             expression = expression.Replace("@@\\", @"\\");
 
                             var result = expressionInterpreter.Eval(expression);
-                            property.Value = new JValue(result);
+
+                            if (result is JArray arrayValue)
+                            {
+                                property.Value = arrayValue;
+                                continue; // Skip further processing
+                            }
+                            if (result is JObject jObject)
+                            {
+                                property.Value = jObject;
+                                continue; // Skip further processing
+                            }
+                            else
+                                property.Value = new JValue(result);
                         }
                         catch (PathNotFoundException ex)
                         {
