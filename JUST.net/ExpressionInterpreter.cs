@@ -31,6 +31,7 @@ namespace JUST.net
         /// Initialize core methods
         /// </summary>
         public void Setup(JToken inputObject, bool strictPathHandling)
+
         {
             this.strictPathHandling = strictPathHandling;
 
@@ -48,7 +49,7 @@ namespace JUST.net
             };
             Func<string, string> nullToString = (value) => value ?? "";
 
-            Func<string, string, string, string> regex= (value, pattern, defaultValue) =>
+            Func<string, string, string, string> regex = (value, pattern, defaultValue) =>
             {
                 var result = Regex.Match(value, pattern);
                 if (result.Success)
@@ -57,11 +58,24 @@ namespace JUST.net
                 return defaultValue;
             };
 
+            Func<string, string, JArray> createSplitList = (value, separator) =>
+            {
+                if (value == null)
+                    return new JArray();
+
+                if (separator == null)
+                    throw new Exception("createSplitList two paramters (value, separator)");
+
+                var splits = value.Split(new string[] { separator }, StringSplitOptions.RemoveEmptyEntries);
+                return JArray.FromObject(splits);
+            };
+
             SetFunction("valueOf", valueOf);
             SetFunction("valueOfStr", valueOfStr);
             SetFunction("valueOfInt", valueOfInt);
             SetFunction("valueOfDouble", valueOfDouble);
             SetFunction("nullToString", nullToString);
+            SetFunction("createSplitList", createSplitList);
             SetFunction("regex", regex);
         }
 
